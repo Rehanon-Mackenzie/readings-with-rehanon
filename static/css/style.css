@@ -1,0 +1,42 @@
+/* Colours and Fonts */
+
+:root {
+    --primary-purple: #32174d;
+    --accent-blue: #63b4d1ff;
+    --accent-pink: #e30b5c;
+}
+
+body {
+    font-family: "Hind Madurai", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3, .navbar-brand {
+    font-family: "Lora", serif;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--primary-purple);
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff;
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-purple);
+    color: #ffffff;
+}
+footer a {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin: 0 0.5rem;
+}
