@@ -42,7 +42,25 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">Readings</a>
-                        </li> 
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-user me-1" aria-hidden="true"></i>My Account
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                {% if user.is_authenticated%}
+                                    {% if user.is_superuser%}
+                                        <li><a href="#" class="dropdown-item">Manage Readings</a></li>
+                                    {% endif %}
+                                    <li><a href="#" class="dropdown-item">My Bookings</a></li>
+                                    <li><a href="{% url 'account_logout' %}" class="dropdown-item">Log out/a></li>
+                                {% else %}
+                                    <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
+                                    <li><a href="{% url 'account_login' %}" class="dropdown-item"></a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -50,7 +68,21 @@
     </header>
     
     <main>
-        {% block content %}{% endblock content %}
+        {% if messages %}
+            <div class="container mt-3">
+                
+                {% for messages in messages %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ message}} 
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block main %}
+            {% block content %}{% endblock content %}
+        {% endblock main %}
     </main>
     
     <footer class="text-center py-4">

@@ -40,3 +40,19 @@ footer a {
     font-size: 1.5rem;
     margin: 0 0.5rem;
 }
+
+/* Buttons */
+.btn-brand {
+    background-color: var(--primary-purple);
+    color: #ffffff;
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+    background-color: var(--accent-pink);
+    color: #ffffff;
+}
+
+.auth-page a {
+    color: var(--primary-purple);
+}

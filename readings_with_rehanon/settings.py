@@ -51,6 +51,10 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'home',
+    
+    # Other
+    'crispy_forms',
+    'crispy_bootstrap5'
 ]
 
 MIDDLEWARE = [
@@ -66,6 +70,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'readings_with_rehanon.urls'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 TEMPLATES = [
     {
@@ -92,6 +99,9 @@ LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 SITE_ID = 1
+
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
 WSGI_APPLICATION = 'readings_with_rehanon.wsgi.application'
 
