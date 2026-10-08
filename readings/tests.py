@@ -126,7 +126,7 @@ class ReadingManagementTests(TestCase):
         data = {**self.valid_data, 'price': '-5.00'}
         response = self.client.post(reverse('add_reading'), data)
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(ReadingType.objects.filter(name='Solar Return Chart').exists)
+        self.assertFalse(ReadingType.objects.filter(name='Solar Return Chart').exists())
 
     # Update
     def test_admin_can_edit_a_reading(self):

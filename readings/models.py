@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
+
 
 class ReadingType(models.Model):
     """A type of reading that clients can book."""
@@ -25,6 +27,12 @@ class ReadingType(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        """Create the slug from the name the first time the reading is saved."""
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('reading_detail', args=[self.slug])

@@ -27,6 +27,13 @@
             </p>
             <a href="{% url 'reading_list'%}" class="btn btn-outline-secondary">Back to readings</a>
             <a href="#" class="btn btn-brand">Book this reading</a>
+            
+            {% if user.is_superuser %}
+                <div class="mt-3">
+                    <a href="{% url 'edit_reading' reading.slug %}" class="btn btn-outline-primary">Edit</a>
+                    <a href="{% url 'delete_reading' reading.slug %}" class="btn btn-outline-danger">Delete</a>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

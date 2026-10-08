@@ -51,7 +51,7 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 {% if user.is_authenticated %}
                                     {% if user.is_superuser %}
-                                        <li><a href="#" class="dropdown-item">Manage Readings</a></li>
+                                        <li><a href="{% url 'add_reading' %}" class="dropdown-item">Manage Readings</a></li>
                                     {% endif %}
                                     <li><a href="#" class="dropdown-item">My Bookings</a></li>
                                     <li><a href="{% url 'account_logout' %}" class="dropdown-item">Log out</a></li>
