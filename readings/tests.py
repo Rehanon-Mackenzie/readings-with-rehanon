@@ -135,6 +135,12 @@ class ReadingManagementTests(TestCase):
         self.client.post(reverse('edit_reading', args=[self.reading.slug]), data)
         self.reading.refresh_from_db()
         self.assertEqual(self.reading.price, Decimal('90.00'))
+    
+    def test_edit_page_shows_existing_details(self):
+        self.client.login(username='admin', password='testing123')
+        response = self.client.get(reverse('edit_reading', args=[self.reading.slug]))
+        self.assertContains(response, 'Birth Chart Reading')
+        self.assertContains(response, '85.00')
 
     # Delete
     def test_admin_can_delete_a_reading(self):

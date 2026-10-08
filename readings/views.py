@@ -64,7 +64,7 @@ def edit_reading(request, slug):
             return redirect(reading.get_absolute_url())
         messages.error(request, 'Please correct the errors below.')
     else:
-        form = ReadingTypeForm()
+        form = ReadingTypeForm(instance=reading)
     return render(request, 'readings/reading_form.html', {
         'form': form,
         'page_title': f'Edit {reading.name}',
