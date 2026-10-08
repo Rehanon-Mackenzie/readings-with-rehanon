@@ -38,7 +38,7 @@ class ReadingViewTests(TestCase):
     def test_list_page_loads_with_correct_template(self):
         response = self.client.get(reverse('reading_list'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'readings/readings_list.html')
+        self.assertTemplateUsed(response, 'readings/reading_list.html')
 
     def test_list_page_shows_active_readings_only(self):
         response = self.client.get(reverse('reading_list'))
