@@ -1,0 +1,58 @@
+[
+{
+  "model": "readings.readingtype",
+  "pk": 1,
+  "fields": {
+    "name": "Birth Chart",
+    "slug": "birth-chart",
+    "summary": "This reading provides a thorough look at what makes you tick as a person.",
+    "description": "A birth chart reading will provide you with a sense of self that is both extremely healing and activating.  Prior to the session I will look over your chart so that I can provide you with the the key astrological stories your chart is providing.  Everyone's birth chart is unique to them and in understanding your astrology it can provide you with a path forward to live your best life.   Together we will discuss your personal planets, the aspects in your chart that provide your inate gifts and the challenges that you are being asked to live out in your life.",
+    "price": "85.00",
+    "duration_minutes": 70,
+    "is_active": true,
+    "image": "image/upload/v1791463957/yn68ff6ns0fejnqzqmkm.png"
+  }
+},
+{
+  "model": "readings.readingtype",
+  "pk": 2,
+  "fields": {
+    "name": "Transit Chart",
+    "slug": "transit-chart",
+    "summary": "This reading gives you an idea of what life has in store for you over the next 6 to 12 months.",
+    "description": "Reading your transit chart will give you a plan of action for the next 6 to 12 months of your life.  We will look at what the major planetary transitions are and what they will mean for your personally.  It's a great reading to have if you have a specific goal in my mind such as a career change or a possible house move.  Of course we can make a change at any time but some season are better for things than others and a transit chart read will provide this advice.",
+    "price": "60.00",
+    "duration_minutes": 45,
+    "is_active": true,
+    "image": "image/upload/v1791464697/readings-with-rehanon/qgzf7aozpldjftkecsot.png"
+  }
+},
+{
+  "model": "readings.readingtype",
+  "pk": 3,
+  "fields": {
+    "name": "Solar Return Chart",
+    "slug": "solar-return-chart",
+    "summary": "Happy birthday to you or as astrologers say happy solar return.  This reading provides an overview of who you will be in your next year of life.",
+    "description": "A solar return reading provides you with an overview of who you will be in the coming year.  Our sun each year returns to the same point in the sky it was when we were born.  However, the planets do not stop moving so although your sun will be at the same point the makeup of your chart houses will have shifted and therefor your rising sign.  This chart provides us with the themes that want to be lived out over the course of the year before your next solar return.  It makes for a great birthday gift and lends itself to goal setting.",
+    "price": "40.00",
+    "duration_minutes": 30,
+    "is_active": true,
+    "image": "image/upload/v1791465069/readings-with-rehanon/ssvrkv17rozh9q7dcate.png"
+  }
+},
+{
+  "model": "readings.readingtype",
+  "pk": 4,
+  "fields": {
+    "name": "Progressed Chart",
+    "slug": "progressed-chart",
+    "summary": "Are you looking to find out what life has in store for the next few years? Well this is the reading for you.",
+    "description": "A progressed chart reading is an ancient prediction technique in which one day following your birth equates to one year after your birth in the chart.  The primary focus of this reading is looking at the progressed moon and seeing which house it's currently sitting in and where it will head next. The progressed moon takes roughly two and half years to pass through each house in the chart so you can get guidance on the area of your life that will be illuminated for that period. It is a great reading to have if you're looking towards projects or goals that require longer-term planning.",
+    "price": "40.00",
+    "duration_minutes": 30,
+    "is_active": true,
+    "image": "image/upload/v1791465593/readings-with-rehanon/sjfse5smgbc9v6fcebuk.png"
+  }
+}
+]

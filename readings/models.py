@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from cloudinary.models import CloudinaryField
 
 class ReadingType(models.Model):
     """A type of reading that clients can book."""
@@ -17,6 +18,7 @@ class ReadingType(models.Model):
         default=True,
         help_text='Untick to hide this reading without deleting it.'
     )
+    image = CloudinaryField('image', blank=True, folder='readings-with-rehanon')
 
     class Meta:
         ordering = ['name']
