@@ -8,7 +8,7 @@
         <h1 class="text-center mb-4">Readings</h1>
         {% if user.is_superuser %}
             <p class="text-center">
-                <a href="{% url 'add_reading' %}" class="btn btn-brand"></a>Add a reading</p>
+                <a href="{% url 'add_reading' %}" class="btn btn-brand">Add a Reading</a></p>
         {% endif %}
         <div class="row">
             {% for reading in readings %}
