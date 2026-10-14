@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h1 class="mb-2">Book a {{ reading.name }}</h1>
+            <p class="mb-4">£{{ reading.price }} | {{ reading.duration_minutes }} minutes</p>
+
+            
+            {% if form.fields.slot.queryset.exists %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button class="btn btn-brand" type="submit">Book this time</button>
+                    <a href="{% url 'reading_detail' reading.slug %}" class="btn btn-outline-secondary">Back</a>
+                </form>
+            {% else %}
+                <p>There are no times available right now. Please check back soon.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    

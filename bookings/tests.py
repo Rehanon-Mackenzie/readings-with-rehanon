@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 
 from django.contrib.auth.models import User
 from django.db import IntegrityError, transaction
@@ -108,11 +108,11 @@ class BookingModelTests(BookingTestSetup):
     def test_cancelled_slot_can_be_booked_again(self):
         self.create_booking(status='cancelled')
         self.create_booking()
-        self.assertEqual(Booking.objects.filter(slot='self'.slot).count(), 2)
+        self.assertEqual(Booking.objects.filter(slot=self.slot).count(), 2)
 
 
 class BookingFormTest(BookingTestSetup):
-    
+
     def test_valid_form(self):
         self.assertTrue(BookingForm(data=self.booking_data()).is_valid())
 
@@ -121,7 +121,7 @@ class BookingFormTest(BookingTestSetup):
         self.assertTrue(form.is_valid())
 
     def test_future_birth_data_rejected(self):
-        tomorrow = (data.today() + timedelta(days=1)).isoformat()
+        tomorrow = (date.today() + timedelta(days=1)).isoformat()
         form = BookingForm(data=self.booking_data(birth_date=tomorrow))
         self.assertFalse(form.is_valid())
         self.assertIn('birth_date', form.errors)
@@ -138,7 +138,7 @@ class BookReadingViewTests(BookingTestSetup):
 
     def setUp(self):
         super().setUp()
-        self.url = reverse('book_reading', args=[self.slug])
+        self.url = reverse('book_reading', args=[self.reading.slug])
 
     def test_login_required(self):
         response = self.client.get(self.url)

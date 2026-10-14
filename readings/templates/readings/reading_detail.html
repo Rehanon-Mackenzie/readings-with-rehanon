@@ -26,7 +26,7 @@
                 <strong>&pound;{{ reading.price }}</strong>
             </p>
             <a href="{% url 'reading_list'%}" class="btn btn-outline-secondary">Back to readings</a>
-            <a href="#" class="btn btn-brand">Book this reading</a>
+            <a href="{% url 'book_reading' reading.slug %}" class="btn btn-brand">Book this reading</a>
             
             {% if user.is_superuser %}
                 <div class="mt-3">
