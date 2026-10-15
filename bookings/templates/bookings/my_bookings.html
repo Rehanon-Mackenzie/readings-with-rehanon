@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="container my-5">
+        <h1 class="mb-4">My Bookings</h1>
+
+    {% if not upcoming and not past %}
+            <p>You haven't booked any readings yet.</p>
+            <a href="{% url 'reading_list' %}" class="btn btn-brand">Browse readings</a>
+        {% else %}
+
+        <h2 class="h4 mb-3">Upcoming</h2>
+        
+        {% for booking in upcoming %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="h5 card-title">{{ booking.reading_type.name }}</h3>
+                    <p class="mb-2">{{ booking.slot }}</p>
+                    {% if booking.status == 'confirmed' %}
+                        <span class="badge bg-success">{{ booking.get_status_display }}</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">{{ booking.get_status_display }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p>No upcoming readings.</p>
+        {% endfor %}
+
+        <h2 class="h4 mt-5 mb-3">Past and cancelled</h2>    
+        {% for booking in past %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="h5 card-title">{{ booking.reading_type.name }}</h3>
+                    <p class="mb-2">{{ booking.slot }}</p>
+                    <span class="badge bg-secondary">{{ booking.get_status_display }}</span>
+                </div>
+            </div>
+        {% empty %}
+            <p>No past readings yet.</p>
+        {% endfor %}
+            
+    {% endif %}
+    </div>
+{% endblock content %}

@@ -172,7 +172,7 @@ class MyBookingsViewTests(BookingTestSetup):
         super().setUp()
         self.url = reverse('my_bookings')
         self.other_user = User.objects.create_user(
-            username='gemini', password='testing123')
+            username='gemini', password='password123')
 
     def make_booking(self, user, slot, **changes):
         fields = {
@@ -183,15 +183,15 @@ class MyBookingsViewTests(BookingTestSetup):
         return Booking.objects.create(**fields)
 
     def login(self):
-        self.client.login(username='client', password='astro123')
+        self.client.login(username='client', password='testing123')
 
     def test_login_required(self):
         response = self.client.get(self.url)
         self.assertRedirects(
-            response, f"{reverse, ('account_login')}?next={self.url}")
+            response, f"{reverse('account_login')}?next={self.url}")
 
     def test_uses_my_bookings_template(self):
-        self.login
+        self.login()
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, 'bookings/my_bookings.html')
 

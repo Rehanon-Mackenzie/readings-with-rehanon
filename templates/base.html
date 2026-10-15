@@ -53,7 +53,7 @@
                                     {% if user.is_superuser %}
                                         <li><a href="{% url 'add_reading' %}" class="dropdown-item">Manage Readings</a></li>
                                     {% endif %}
-                                    <li><a href="#" class="dropdown-item">My Bookings</a></li>
+                                    <li><a href="{% url 'my_bookings' %}" class="dropdown-item">My Bookings</a></li>
                                     <li><a href="{% url 'account_logout' %}" class="dropdown-item">Log out</a></li>
                                 {% else %}
                                     <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
