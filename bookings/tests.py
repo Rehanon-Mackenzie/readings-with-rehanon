@@ -164,4 +164,66 @@ class BookReadingViewTests(BookingTestSetup):
         self.reading.is_active = False
         self.reading.save()
         self.client.login(username='client', password='testing123')
-        self.assertEqual(self.client.get(self.url).status_code, 404)
+        
+        
+class MyBookingsViewTests(BookingTestSetup):
+
+    def setUp(self):
+        super().setUp()
+        self.url = reverse('my_bookings')
+        self.other_user = User.objects.create_user(
+            username='gemini', password='testing123')
+
+    def make_booking(self, user, slot, **changes):
+        fields = {
+            'user': user, 'reading_type': self.reading, 'slot': slot,
+            'birth_date': date(1980, 6, 17), 'birth_place': 'Glasgow',
+        }
+        fields.update(changes)
+        return Booking.objects.create(**fields)
+
+    def login(self):
+        self.client.login(username='client', password='astro123')
+
+    def test_login_required(self):
+        response = self.client.get(self.url)
+        self.assertRedirects(
+            response, f"{reverse, ('account_login')}?next={self.url}")
+
+    def test_uses_my_bookings_template(self):
+        self.login
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'bookings/my_bookings.html')
+
+    def test_shows_own_upcoming_bookings(self):
+        booking = self.make_booking(self.user, self.slot)
+        self.login()
+        response = self.client.get(self.url)
+        self.assertIn(booking, response.context['upcoming'])
+        self.assertContains(response, 'Birth Chart')
+
+    def test_does_not_show_other_users_bookings(self):
+        other_booking = self.make_booking(self.other_user, self.slot)
+        self.login()
+        response = self.client.get(self.url)
+        self.assertNotIn(other_booking, response.context['upcoming'])
+        self.assertNotIn(other_booking, response.context['past'])
+
+    def test_past_booking_listed_as_past(self):
+        old = self.make_booking(self.user, make_slot(days_ahead=-3))
+        self.login()
+        response = self.client.get(self.url)
+        self.assertIn(old, response.context['past'])
+        self.assertNotIn(old, response.context['upcoming'])
+
+    def test_cancelled_booking_not_upcoming(self):
+        cancelled = self.make_booking(self.user, self.slot, status='cancelled')
+        self.login()
+        response = self.client.get(self.url)
+        self.assertNotIn(cancelled, response.context['upcoming'])
+        self.assertIn(cancelled, response.context['past'])
+
+    def test_message_when_no_bookings(self):
+        self.login()
+        response = self.client.get(self.url)
+        self.assertContains(response, "You haven't booked any readings yet")
