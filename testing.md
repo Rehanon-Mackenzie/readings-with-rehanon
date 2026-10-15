@@ -23,3 +23,11 @@
 | Delete reading (client) | Log in as a client and visit `/readings/birth-chart/delete/` | Redirected home with "Sorry only the site owner can do that." | Pass |
 | Delete reading (logged out) | Log out and visit `/readings/birth-chart/delete/` | Redirected to the login page | Pass |
 
+### Booking Testing
+
+| Feature | Test | Expected | Result |
+| ------- | ---- | -------- | ------ |
+| Need to be logged into book |  Logged out and clicked "book" button birth chart reading | Redirected to the login page. Logged in and was taken back to the booking form| Pass |
+| Booked slot disappears | As an admin, added one slot. As a client, booked it for a birth chart reading, then opened the booking form for a Sola Return| Success message with the date and time; the Solar Return forms shows "There are no times available right now" | Pass |
+| Birth date cannot be in the future | Filled in booking form with future birth date | Error message displayed "Date of birth cannot be in the future." form not accepted | Pass |
+
