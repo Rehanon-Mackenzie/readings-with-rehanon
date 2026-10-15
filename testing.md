@@ -3,6 +3,11 @@
 | --- | --- | --- |
 | `test_anonymous_user_sees_login_and_register_links` | The "Log in" link in the My Account dropdown had no text, so logged-out user saw a blank menu item. | Added the missing link text in `base.html`.|
 | `test_admin_can_edit_a_reading`, `test_detail_page_shows_the_reading` | `super().save()` was indented inside the `if not self.slug:` block, so readings were only saved the first time. Edits silently did nothing. | Moved `super().save()` out of the `if` block so every save works. |
+`FieldError: Unknown field(s) (birth-date)` when running tests | A field name had a hyphen in the form's `fields` list. This does not working with Python naming. | Used VS Code's global search for every instance of `birth-date` and changed each to `birth_date`. |
+| `test_booked_slot_rejected` failed: the booking form accepted a slot that was already booked | The form's slot didn't exclude slots, so a client could have booked a slot that was already taken. | Filtered the slot dropdown to free, future slots only: `AvailabilitySlot.objectsfilter(is_booked=False, start_time__gt=timezone.now())`. |
+| `test_slot_cannot_have_two_active_bookings` failed: the database allowed two active bookings on the same slot | The `UniqueConstraint` condition was written as Q(status='cancelled') instead of `~Q(status='cancelled')`. Without the `~` (NOT), the rule only applied to cancelled bookings. | Added the `~`. The test still failed, because the migration kept the old rule: the learning was that tests build their database from the migrations not the `models.py`. Therefore, I rolled back, deleted and unapplied the migration and ran `makemigrations` and `migrate` again. All tests passed. |
+| `TemplatedDoesNotExist: bookings/book_readings.html` | Typo in the template name in the view. | Corrected it to `bookings/book_reading.html`. |
+
 
 ## Manual Testing
 
