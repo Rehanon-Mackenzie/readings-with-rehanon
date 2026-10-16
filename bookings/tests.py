@@ -280,3 +280,53 @@ class CancelBookingTests(BookingTestSetup):
         self.client.post(reverse('cancel_booking', args=[soon.pk]))
         soon.refresh_from_db()
         self.assertEqual(soon.status, 'pending')
+
+
+class RescheduledBookingTests(BookingTestSetup):
+    
+    def setUp(self):
+        super().setUp()
+        self.booking = self.make_booking(self.user, self.slot)
+        self.slot.is_booked = True
+        self.slot.save()
+        self.new_slot = make_slot(days_ahead=5)
+        self.url = reverse('reschedule_booking', args=[self.booking.pk])
+
+    def test_gets_shows_reschedule_page(self):
+        self.login()
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'bookings/reschedule_booking.html')
+
+    def test_owner_can_move_to_new_slot(self):
+        self.login()
+        response = self.client.post(self.url, {'slot': self.new_slot.pk})
+        self.assertRedirects(response, reverse('my_bookings'))
+        self.booking.refresh_from_db()
+        self.slot.refresh_from_db()
+        self.new_slot.refresh_from_db()
+        self.assertEqual(self.booking.slot, self.new_slot)
+        self.assertFalse(self.slot.is_booked)  # old slot released
+        self.assertTrue(self.new_slot.is_booked)  # new slot booked
+
+    def test_other_user_cannot_reschedule(self):
+        User.objects.create_user(username='other', password='password123')
+        self.client.login(username='other', password='password123')
+        response = self.client.post(self.url, {'slot': self.new_slot.pk})
+        self.assertEqual(response.status_code, 404)
+
+    def test_cannot_reschedule_within_48_hours(self):
+        soon_slot = make_slot(days_ahead=1)
+        soon = self.make_booking(self.user, soon_slot)
+        self.login
+        self.client.post(reverse('reschedule_booking', args=[soon.pk]),
+                         {'slot': self.new_slot.pk})
+        soon.refresh_from_db()
+        self.assertEqual(soon.slot, soon_slot)
+
+    def test_cannot_moved_to_booked_slot(self):
+        self.new_slot.is_booked = True
+        self.new_slot.save()
+        self.login()
+        self.client.post(self.url, {'slot': self.new_slot.pk})
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.slot, self.slot)
