@@ -243,11 +243,11 @@ class CancelBookingTests(BookingTestSetup):
 
     def test_cannot_change_within_48_hours(self):
         soon = self.make_booking(self.user, make_slot(days_ahead=1))
-        self.assertFalse(self.booking.can_be_changed())
+        self.assertFalse(soon.can_be_changed())
 
     def test_cancelled_booking_cannot_be_changed(self):
         self.booking.status = 'cancelled'
-        self.assertFalse(self.booking.can_be_change())
+        self.assertFalse(self.booking.can_be_changed())
 
     # cancel page (view)
     def test_get_shows_confirmation_and_changes_nothing(self):

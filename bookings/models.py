@@ -4,24 +4,28 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.conf import settings
 
+from datetime import timedelta
+
 from readings.models import ReadingType
+
+CHANGE_CUTOFF = timedelta(hours=48)
 
 
 class AvailabilitySlot(models.Model):
     """A time when the reader is available to give a reading."""
-    
+
     start_time = models.DateTimeField(unique=True)
     end_time = models.DateTimeField()
     is_booked = models.BooleanField(default=False)
-    
+
     class Meta:
         ordering = ['start_time']
-    
+
     def __str__(self):
         start = timezone.localtime(self.start_time)
         end = timezone.localtime(self.end_time)
         return f"{start:%a %d %b %y, %H:%M} to {end:%H:%M}"
-    
+
     def clean(self):
         """Check the slot makes sense before it is saved."""
         if self.start_time and self.end_time and self.end_time <= self.start_time:
@@ -53,7 +57,7 @@ class Booking(models.Model):
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default='pending')
     created_on = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ['slot__start_time']
         constraints = [
@@ -66,3 +70,9 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.reading_type.name} - {self.slot}"
+
+    def can_be_changed(self):
+        """Clients can cancel or reschedule more than 48 hours before the reading."""
+        if self.status == 'cancelled':
+            return False
+        return self.slot.start_time - timezone.now() > CHANGE_CUTOFF

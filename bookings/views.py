@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from readings.models import ReadingType
 from .forms import BookingForm
+from .models import Booking
 
 
 @login_required
@@ -51,3 +52,26 @@ def my_bookings(request):
     ).order_by('-slot__start_time')
 
     return render(request, 'bookings/my_bookings.html', {'upcoming': upcoming, 'past': past})
+
+@login_required
+def cancel_booking(request, pk):
+    booking = get_object_or_404(Booking, pk=pk, user=request.user)
+
+    if not booking.can_be_changed():
+        messages.error(
+            request,
+            'Bookings can only be cancelled more than 48 hours before the reading.')
+        return redirect('my_bookings')
+    
+    if request.method == 'POST':
+        with transaction.atomic():
+            booking.status = 'cancelled'
+            booking.save()
+            booking.slot.is_booked = False
+            booking.slot.save()
+        messages.success(
+            request,
+            f'Your {booking.reading_type.name} on {booking.slot} has been cancelled.')
+        return redirect('my_bookings')
+
+    return render(request, 'bookings/cancel_booking.html', {'booking': booking})

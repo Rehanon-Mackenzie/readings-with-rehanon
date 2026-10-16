@@ -30,4 +30,7 @@
 | Need to be logged into book |  Logged out and clicked "book" button birth chart reading | Redirected to the login page. Logged in and was taken back to the booking form| Pass |
 | Booked slot disappears | As an admin, added one slot. As a client, booked it for a birth chart reading, then opened the booking form for a Sola Return| Success message with the date and time; the Solar Return forms shows "There are no times available right now" | Pass |
 | Birth date cannot be in the future | Filled in booking form with future birth date | Error message displayed "Date of birth cannot be in the future." form not accepted | Pass |
+| Cancelled booking moves to "Past and cancelled"| Cancelled a booking | Confirmation message displayed "Your (reading name) on (booking slot) has been cancelled. Redirected to my bookings and booking is now in "Past and cancelled and slot is avaialable to book again | Pass |
+| No cancel button within 48 hours| As admin added slot for 24 ahead. As a client, booked it and opened My Bookings | No cancel button; message "Less than 48 hours to go, so this booking can't be changed online." | Pass |
+| Other user can't cancel a booking | Logged in as another user typed `/bookings/5/cancel/` (the first client's booking) | 404 page with "No Booking matches the given query" | Pass |
 
