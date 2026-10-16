@@ -6,8 +6,8 @@
 {% block content %}
     <h1>Register</h1>
     <p>Create an account to book readings, manage your bookings and keep your birth details private.</p>
-    <p>Already have an account> <a href="{% 'account_login'}">Log in here</a>.</p>
-    <form method="post" action="{%url 'account_signup' %}">
+    <p>Already have an account> <a href="{% url 'account_login' %}">Log in here</a>.</p>
+    <form method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
         {{ form|crispy }}
         {% if redirect_field_value %}

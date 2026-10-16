@@ -78,6 +78,17 @@ class BookingTestSetup(TestCase):
         data.update(changes)
         return data
 
+    def make_booking(self, user, slot, **changes):
+        fields = {
+            'user': user, 'reading_type': self.reading, 'slot': slot,
+            'birth_date': date(1980, 6, 17), 'birth_place': 'Glasgow',
+        }
+        fields.update(changes)
+        return Booking.objects.create(**fields)
+
+    def login(self):
+        self.client.login(username='client', password='testing123')
+
 
 class BookingModelTests(BookingTestSetup):
 
@@ -103,7 +114,6 @@ class BookingModelTests(BookingTestSetup):
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 self.create_booking()
-
 
     def test_cancelled_slot_can_be_booked_again(self):
         self.create_booking(status='cancelled')
@@ -164,8 +174,8 @@ class BookReadingViewTests(BookingTestSetup):
         self.reading.is_active = False
         self.reading.save()
         self.client.login(username='client', password='testing123')
-        
-        
+
+
 class MyBookingsViewTests(BookingTestSetup):
 
     def setUp(self):
@@ -173,17 +183,6 @@ class MyBookingsViewTests(BookingTestSetup):
         self.url = reverse('my_bookings')
         self.other_user = User.objects.create_user(
             username='gemini', password='password123')
-
-    def make_booking(self, user, slot, **changes):
-        fields = {
-            'user': user, 'reading_type': self.reading, 'slot': slot,
-            'birth_date': date(1980, 6, 17), 'birth_place': 'Glasgow',
-        }
-        fields.update(changes)
-        return Booking.objects.create(**fields)
-
-    def login(self):
-        self.client.login(username='client', password='testing123')
 
     def test_login_required(self):
         response = self.client.get(self.url)
@@ -227,3 +226,57 @@ class MyBookingsViewTests(BookingTestSetup):
         self.login()
         response = self.client.get(self.url)
         self.assertContains(response, "You haven't booked any readings yet")
+
+
+class CancelBookingTests(BookingTestSetup):
+
+    def setUp(self):
+        super().setUp()
+        self.booking = self.make_booking(self.user, self.slot)
+        self.slot.is_booked = True
+        self.slot.save()
+        self.url = reverse('cancel_booking', args=[self.booking.pk])
+
+    # the 48-hour cancellation (model)
+    def test_can_change_more_than_48_hours_ahead(self):
+        self.assertTrue(self.booking.can_be_changed())
+
+    def test_cannot_change_within_48_hours(self):
+        soon = self.make_booking(self.user, make_slot(days_ahead=1))
+        self.assertFalse(self.booking.can_be_changed())
+
+    def test_cancelled_booking_cannot_be_changed(self):
+        self.booking.status = 'cancelled'
+        self.assertFalse(self.booking.can_be_change())
+
+    # cancel page (view)
+    def test_get_shows_confirmation_and_changes_nothing(self):
+        self.login()
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'bookings/cancel_booking.html')
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'pending')
+
+    def test_owner_can_cancel_and_slot_is_freed(self):
+        self.login()
+        response = self.client.post(self.url)
+        self.assertRedirects(response, reverse('my_bookings'))
+        self.booking.refresh_from_db()
+        self.slot.refresh_from_db()
+        self.assertEqual(self.booking.status, 'cancelled')
+        self.assertFalse(self.slot.is_booked)
+
+    def test_other_user_cannot_cancel(self):
+        User.objects.create_user(username='other', password='password123')
+        self.client.login(username='other', password='password123')
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 404)
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'pending')
+
+    def test_cannot_cancel_within_48_hours(self):
+        soon = self.make_booking(self.user, make_slot(days_ahead=1))
+        self.login()
+        self.client.post(reverse('cancel_booking', args=[soon.pk]))
+        soon.refresh_from_db()
+        self.assertEqual(soon.status, 'pending')
