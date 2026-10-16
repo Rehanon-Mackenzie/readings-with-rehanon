@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from readings.models import ReadingType
-from .forms import BookingForm
+from .forms import BookingForm, RescheduleForm
 from .models import Booking
 
 
@@ -62,7 +62,7 @@ def cancel_booking(request, pk):
             request,
             'Bookings can only be cancelled more than 48 hours before the reading.')
         return redirect('my_bookings')
-    
+
     if request.method == 'POST':
         with transaction.atomic():
             booking.status = 'cancelled'
@@ -75,3 +75,38 @@ def cancel_booking(request, pk):
         return redirect('my_bookings')
 
     return render(request, 'bookings/cancel_booking.html', {'booking': booking})
+
+
+@login_required
+def reschedule_booking(request, pk):
+    booking = get_object_or_404(Booking, pk=pk, user=request.user)
+
+    if not booking.can_be_changed():
+        messages.error(
+            request,
+            'Bookings can only be moved more than 48 hours before the reading.')
+        return redirect('my_bookings')
+
+    old_slot = booking.slot
+
+    if request.method == 'POST':
+        form = RescheduleForm(request.POST, instance=booking)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    old_slot.is_booked = False
+                    old_slot.save()
+                    booking = form.save()
+                    booking.slot.is_booked = True
+                    booking.slot.save()
+            except IntegrityError:
+                messages.error(request, 'Sorry that time has just been taken. Please choose another.')
+                return redirect('reschedule_booking', pk=booking.pk)
+            messages.success(
+                request, f'Your {booking.reading_type.name} has been moved to {booking.slot}.')
+            return redirect('my_bookings')
+    else:
+        form = RescheduleForm(instance=booking)
+
+    return render(request, 'bookings/reschedule_booking.html',
+                  {'form': form, 'booking': booking})

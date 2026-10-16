@@ -24,6 +24,7 @@
                     {% endif %}
                     
                     {% if booking.can_be_changed %}
+                        <a href="{% url 'reschedule_booking' booking.pk %}" class="btn btn-sm btn-outline-secondary mt-2 me-1">Reschedule</a>
                         <a href="{% url 'cancel_booking' booking.pk %}" class="btn btn-sm btn-outline-danger mt-2">Cancel</a>
                     {% else %}
                         <p class="small text-muted mt-2 mb-0">Less than 48 hours to go, so this booking can't be changed online.</p>

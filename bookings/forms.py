@@ -39,3 +39,16 @@ class BookingForm(forms.ModelForm):
         if birth_date > date.today():
             raise forms.ValidationError("Date of birth can't be in the future?")
         return birth_date
+
+
+class RescheduleForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['slot']
+        labels = {'slot': 'New date and time'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['slot'].queryset = AvailabilitySlot.objects.filter(
+            is_booked=False, start_time__gt=timezone.now())
+        self.fields['slot'].empty_label = 'Choose a new date and time'
