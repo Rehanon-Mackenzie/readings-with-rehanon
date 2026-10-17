@@ -18,7 +18,6 @@ def checkout(request, booking_id):
     intent = stripe.PaymentIntent.create(
         amount=amount,
         currency=settings.STRIPE_CURRENCY,
-        payment_method_types=['card'],
         metadata={'booking_id': booking.pk, 'username': request.user.username},
     )
 

@@ -18,8 +18,8 @@
 
             <form id="payment-form">
                 <div id="payment-element" class="mb-3"></div>
-                <div id="payment_errors" class="text-danger mb-3" role="alert"></div>
-                <button id="submit-button" type="submit" class="btn-btn-brand w-100">
+                <div id="payment-errors" class="text-danger mb-3" role="alert"></div>
+                <button id="submit-button" type="submit" class="btn btn-brand w-100">
                     Pay £{{ booking.reading_type.price }}
                 </button>
             </form>
@@ -38,6 +38,6 @@
 
 {% block extra_js %}
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="{% static 'checkout/js/stripe_paument.js' %}"></script>
+    <script src="{% static 'checkout/js/stripe_payment.js' %}"></script>
 {% endblock extra_js %}
     

@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function(){
     elements.create('payment').mount('#payment-element');
 
     const form = document.getElementById('payment-form');
-    const button = document.getElementById('submit-form');
+    const button = document.getElementById('submit-button');
     const errors = document.getElementById('payment-errors');
 
     form.addEventListener('submit', async function (event) {

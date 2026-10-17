@@ -85,3 +85,42 @@ class CheckoutViewTests(CheckoutTestSetup):
         self.client.login(username='client', password='testing123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 404)
+
+
+class CheckoutSuccessTests(CheckoutTestSetup):
+
+    def setUp(self):
+        super().setUp()
+        self.url = reverse('checkout_success', args=[self.booking.pk])
+        self.client.login(username='client', password='testing123')
+
+    def fake_intent(self, status='suceeded', booking_id=None):
+        return MagicMock(
+            id='pi_test_1', status=status, amount=8500,
+            metadata={'booking_id': str(booking_id or self.booking.pk)})
+
+    @patch('checkout.views.stripe.PaymentIntent.retrieve')
+    def test_successful_payment_confirms_booking(self, mock_retrieve):
+        response = self.client.get(self.url, {'payment_intent': 'pi_test_1'})
+        self.assertTemplateUsed(response, 'checkout/checkout_success.html')
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'confirmed')
+        self.assertTrue(Order.objects.filter(booking=self.booking).exists())
+
+    @patch('checkout.views.stripe.PaymentIntent.retrieve')
+    def test_unfinished_payment_does_not_confirm(self, mock_retrieve):
+        mock_retrieve.return_value = self.fake_intent(status='requires_payment_method')
+        response = self.client.get(self.url, {'payment_intent': 'pi_test_1'})
+        self.assertRedirects(
+            response, reverse('checkout', args=[self.booking.pk]),
+            fetch_redirect_response=False)
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'pending')
+        self.assertEqual(Order.objects.count(), 0)
+
+    @patch('checkout.views.stripe.PaymentIntent.retrieve')
+    def test_payment_for_another_booking_is_rejected(self, mock_retrieve):
+        mock_retrieve.return_value = self.fake_intent(booking_id=999)
+        self.client.get(self.url, {'payment_intent': 'pi_test_1'})
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'pending')
