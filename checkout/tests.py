@@ -58,7 +58,7 @@ class CheckoutViewTests(CheckoutTestSetup):
     def test_login_required(self):
         response = self.client.get(self.url)
         self.assertRedirects(
-            response, f"{reverse, ('account_login')}?next={self.url}")
+            response, f"{reverse('account_login')}?next={self.url}")
 
     @patch('checkout.views.stripe.PaymentIntent.create')
     def test_checkout_page_shows_payment_form(self, mock_create):

@@ -30,8 +30,8 @@ def book_reading(request, slug):
                 messages.error(request, 'Sorry that time has just been taken. Please choose another.')
                 return redirect('book_reading', slug=reading.slug)
             messages.success(
-                request, f'Your {reading.name} is held for {booking.slot}.')
-            return redirect('reading_detail', slug=reading.slug)
+                request, f'Your {reading.name} is held for {booking.slot} Please complete your payment to confirm it.')
+            return redirect('checkout', booking_id=booking.pk)
         messages.error(request, 'Please check the form for errors.')
     else:
         form = BookingForm()

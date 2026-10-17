@@ -17,6 +17,11 @@
                 <div class="card-body">
                     <h3 class="h5 card-title">{{ booking.reading_type.name }}</h3>
                     <p class="mb-2">{{ booking.slot }}</p>
+                    
+                    {% if booking.status == 'pending' %}
+                        <a href="{% url 'checkout' booking.pk %}" class="btn btn-sm btn-brand mt-2 me-1">Pay now</a>
+                    {% endif %}
+                        
                     {% if booking.status == 'confirmed' %}
                         <span class="badge bg-success">{{ booking.get_status_display }}</span>
                     {% else %}
