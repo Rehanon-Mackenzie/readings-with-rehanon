@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <h1 class="col-md-8 col-lg-6 text-center">Thank you, your reading is booked</h1>
+        <div class="card text-start mb-4">
+            <div class="card-body">
+                <h2 class="h5">{{ book.reading_type.name }}</h2>
+                <p class="mb-1">{{ booking.slot }}</p>
+                <p class="mb-1">Paid: £{{ order.amount }}</p>
+                <p class="mb-0">Order number: <strong>{{ order.order_number }}</strong></p>
+            </div>
+        </div>
+        <a href="{% url 'my_bookings' %}" class="btn btn-brand">Go to My Bookings</a>
+    </div>
+</div>
+{% endblock content %}
+    

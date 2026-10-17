@@ -94,13 +94,14 @@ class CheckoutSuccessTests(CheckoutTestSetup):
         self.url = reverse('checkout_success', args=[self.booking.pk])
         self.client.login(username='client', password='testing123')
 
-    def fake_intent(self, status='suceeded', booking_id=None):
+    def fake_intent(self, status='succeeded', booking_id=None):
         return MagicMock(
             id='pi_test_1', status=status, amount=8500,
             metadata={'booking_id': str(booking_id or self.booking.pk)})
 
     @patch('checkout.views.stripe.PaymentIntent.retrieve')
     def test_successful_payment_confirms_booking(self, mock_retrieve):
+        mock_retrieve.return_value = self.fake_intent()
         response = self.client.get(self.url, {'payment_intent': 'pi_test_1'})
         self.assertTemplateUsed(response, 'checkout/checkout_success.html')
         self.booking.refresh_from_db()
