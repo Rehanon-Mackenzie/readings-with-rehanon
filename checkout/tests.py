@@ -1,9 +1,11 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.urls import reverse
 
 from datetime import date, timedelta
 from decimal import Decimal
+from unittest.mock import MagicMock, patch
 
 from bookings.models import AvailabilitySlot, Booking
 from readings.models import ReadingType
@@ -45,3 +47,41 @@ class OrderTests(CheckoutTestSetup):
         confirm_booking_payment(self.booking, 'pi_test_1', 8500)
         confirm_booking_payment(self.booking, 'pi_test_1', 8500)
         self.assertEqual(Order.objects.count(), 1)
+
+
+class CheckoutViewTests(CheckoutTestSetup):
+
+    def setUp(self):
+        super().setUp()
+        self.url = reverse('checkout', args=[self.booking.pk])
+
+    def test_login_required(self):
+        response = self.client.get(self.url)
+        self.assertRedirects(
+            response, f"{reverse, ('account_login')}?next={self.url}")
+
+    @patch('checkout.views.stripe.PaymentIntent.create')
+    def test_checkout_page_shows_payment_form(self, mock_create):
+        mock_create.return_value = MagicMock(client_secret='pi_test_secret')
+        self.client.login(username='client', password='testing123')
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'checkout/checkout.html')
+        self.assertContains(response, 'pi_test_secret')
+        # £85 must be sent to Stripe as 8500 pence
+        self.assertEqual(mock_create.call_args.kwargs['amount'], 8500)
+
+    @patch('checkout.views.stripe.PaymentIntent.create')
+    def test_other_users_gets_404(self, mock_create):
+        User.objects.create_user(username='other', password='password123')
+        self.client.login(username='other', password='password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 404)
+        mock_create.assert_not_called()
+
+    @patch('checkout.views.stripe.PaymentIntent.create')
+    def test_confirmed_booking_cannot_be_paid_again(self, mock_create):
+        self.booking.status = 'confirmed'
+        self.booking.save()
+        self.client.login(username='client', password='testing123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 404)
