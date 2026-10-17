@@ -14,14 +14,14 @@ from .payments import confirm_booking_payment
 class CheckoutTestSetup(TestCase):
 
     def setUp(self):
-        self.user - User.objects.create_user(
+        self.user = User.objects.create_user(
             username='client', password='testing123')
         reading = ReadingType.objects.create(
             name='Birth Chart', summary='Your natal chart',
             description='Full reading', price=85, duration_minutes=60,)
         start = timezone.now() + timedelta(days=3)
         slot = AvailabilitySlot.objects.create(
-            star_time=start, end_time=start + timedelta(hours=1))
+            start_time=start, end_time=start + timedelta(hours=1))
         self.booking = Booking.objects.create(
             user=self.user, reading_type=reading, slot=slot,
             birth_date=date(1980, 6, 17), birth_place='Brighton')
