@@ -140,3 +140,7 @@ class ConfirmationEmailTests(CheckoutTestSetup):
         confirm_booking_payment(self.booking, 'pi_test_1', 8500)
         confirm_booking_payment(self.booking, 'pi_test_1', 8500)
         self.assertEqual(len(mail.outbox), 1)
+
+
+class WebhookTests(CheckoutTestSetup):
+    

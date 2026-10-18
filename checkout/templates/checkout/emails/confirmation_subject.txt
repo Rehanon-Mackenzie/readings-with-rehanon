@@ -1,0 +1,1 @@
+{% autoescape off %}Your {{ booking.reading_type.name }} is confirmed (order {{ order.order_number }}){% endautoescape %}
