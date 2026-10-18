@@ -330,3 +330,58 @@ class RescheduledBookingTests(BookingTestSetup):
         self.client.post(self.url, {'slot': self.new_slot.pk})
         self.booking.refresh_from_db()
         self.assertEqual(self.booking.slot, self.slot)
+
+
+class SlotManagementTests(BookingTestSetup):
+
+    def setUp(self):
+        super().setUp()
+        self.admin = User.objects.create_superuser(
+            username='admin', email='admin@testing.com', password='testing123')
+        self.list_url = reverse('manage_slots')
+        self.add_url = reverse(['add_slot'])
+
+    def admin_login(self):
+        self.client.login(username='admin', password='testing123')
+
+    def slot_data(self, days_ahead=7, hours_long=1):
+        start = (timezone.localtime() + timedelta(days=days_ahead)).replace(
+            hour=14, minute=0, second=0, microsecond=0)
+        end = start + timedelta(hours=hours_long)
+        return {'start_time': start.strftime('%Y-%m-%dT%H:%M'),
+                'end_time': end.strftime('%Y-%m-%dT%H:%M')}
+
+    # Who can get in
+    def test_anonymous_sent_to_login(self):
+        response = self.client.get(self.list_url)
+        self.assertRedirects(
+            response, f"{reverse('account_login')}?next={self.list_url}")
+
+    def test_client_cannot_manage_slots(self):
+        self.login()
+        response = self.client.get(self.list_url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_admin_sees_slot_list(self):
+        self.admin_login()
+        response = self.client.get(self.list_url)
+        self.assertTemplateUsed(response, 'bookings/manage_slots.html')
+        self.assertIn(self.slot, response.context['slots'])
+
+    # Adding
+    def test_admin_can_add_slot(self):
+        self.admin_login
+        self.client.post(self.add_url, self.slot_data(hours_long=-1))
+        self.assertEqual(AvailabilitySlot.objects.count(), 1)
+
+    def test_end_before_start_rejected(self):
+        self.admin_login()
+        self.client.post(self.add_url, self.slot_data(days_ahead=-2))
+        self.assertEqual(AvailabilitySlot.objects.count(), 1)
+
+    # Deleting
+    def test_can_admin_delete_free_slot(self):
+        self.admin_login()
+        url = reverse('delete_slot', args=[self.slot.pk])
+        self.client.post(url)
+        self.assertTrue(AvailabilitySlot.objects.filter(pk=self.slot.pk).exists())
