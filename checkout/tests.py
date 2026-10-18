@@ -143,4 +143,49 @@ class ConfirmationEmailTests(CheckoutTestSetup):
 
 
 class WebhookTests(CheckoutTestSetup):
-    
+
+    def setUp(self):
+        super().setUp()
+        self.url = reverse('webhook')
+
+    def stripe_event(self, booking_id):
+        return {
+            'type': 'payment_intent.succeeded',
+            'data': {'object': {
+                'id': 'pi_test_1', 'amount': 8500,
+                'metadata': {'booking_id': str(booking_id)},
+            }}
+        }
+
+    def post_event(self):
+        return self.client.post(
+            self.url, data='{}', content_type='application/json',
+            HTTP_STRIPE_SIGNATURE='test_signature')
+
+    @patch('checkout.webhooks.stripe.Webhook.construct_event')
+    def test_payment_succeeded_confirms_booking(self, mock_construct):
+        mock_construct.return_value = self.stripe_event(self.booking.pk)
+        response = self.post_event()
+        self.assertEqual(response.status_code, 200)
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'confirmed')
+        self.assertEqual(Order.objects.count(), 1)
+
+    @patch('checkout.webhooks.stripe.Webhook.construct_event')
+    def test_invalid_signature_rejected(self, mock_construct):
+        mock_construct.side_effect = ValueError('Invalid payload')
+        response = self.post_event()
+        self.assertEqual(response.status_code, 400)
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'pending')
+
+    @patch('checkout.webhooks.stripe.Webhook.construct_event')
+    def test_unknown_booking_is_ignored(self, mock_construct):
+        mock_construct.return_value = self.stripe_event(999)
+        response = self.post_event()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Order.objects.count(), 0)
+
+    def test_get_not_allowed(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 405)
