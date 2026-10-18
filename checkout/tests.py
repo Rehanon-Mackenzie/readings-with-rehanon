@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
+from django.core import mail
 
 from datetime import date, timedelta
 from decimal import Decimal
@@ -17,7 +18,7 @@ class CheckoutTestSetup(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
-            username='client', password='testing123')
+            username='client', email='client@testing.com', password='testing123')
         reading = ReadingType.objects.create(
             name='Birth Chart', summary='Your natal chart',
             description='Full reading', price=85, duration_minutes=60,)
@@ -125,3 +126,17 @@ class CheckoutSuccessTests(CheckoutTestSetup):
         self.client.get(self.url, {'payment_intent': 'pi_test_1'})
         self.booking.refresh_from_db()
         self.assertEqual(self.booking.status, 'pending')
+
+
+class ConfirmationEmailTests(CheckoutTestSetup):
+
+    def test_email_sent_when_booking_confirmed(self):
+        order = confirm_booking_payment(self.booking, 'pi_test_1', 8500)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['client@testing.com'])
+        self.assertIn(order.order_number, mail.outbox[0].body)
+
+    def test_email_sent_only_once(self):
+        confirm_booking_payment(self.booking, 'pi_test_1', 8500)
+        confirm_booking_payment(self.booking, 'pi_test_1', 8500)
+        self.assertEqual(len(mail.outbox), 1)
