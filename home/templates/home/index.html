@@ -1,7 +1,197 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container py-4">
     <h1>Readings with Rehanon</h1>
+  <section>
+    <header id="hero" class="container-fluid">
+      <div class="col-12 text-center">
+        <h1 class="display-4 my-4">Rehanon Mackenzie</h1>
+        <h2 class="display-6 mb-5"> Down to Earth Astrologer</h2>
+        <p>Hey! My name is Rehanon and in case you're wondering <strong> I am a Gemini Sun, Leo Moon and Scorpio rising
+          </strong>, so I was always going to be enamoured with the stars. I have been interested in how we tick ever
+          since I was a little
+          girl. I grew up with a Nan who was very much a kitchen witch. It wasn't until I was at school I realised not
+          everyone had their tea leaves read or washed the front door down with mint for good luck and prosperity.
+        </p>
+      </div>
+
+    </header>
+    <!-- hero section image -->
+  </section>
+
+  <!-- main content -->
+  <main>
+    <!-- about me section links to #about me href in navbar -->
+    <section id="about" class="p-5">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-12">
+            <img src="{% static 'images/astro-profile-pic-2.webp' %}"
+              alt="Rehanon profile picture">
+          </div>
+        </div>
+        <div class="row mt-3">
+          <h2 class="text-center">About Me</h2>
+          <div class="col-12">
+            <p>A few years ago I found myself at a crossroads and leaning into astrology at a much deeper level as
+              another means of assessing who I was and what I wanted. I trained as an evolutionary astrologer. I love
+              this
+              take on astrology because it really give folks a base to find out about the gifts and growth areas in
+              their
+              chart and provides practical guidance on how to flow with life rather than against it.</p>
+            <p>Understanding your astrology for me is no different to checking the weather report before you head out
+              for the day. Of course we can never be sure it is definitely going to rain but you will not regret
+              packing
+              your umbrella just in case. Knowing when the planets are passing through your own chart will give you
+              the
+              confidence to head out come rain or shine.</p>
+            <p>I can't wait to help you unpick your own chart and truly work out who you are and what you came here
+              for.
+              My approach is light-hearted and down to earth but provides a clear roadmap to your best chapter yet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- offering section -->
+    <section id="readings" class="p-5">
+      <div class="container">
+        <h2 class="text-center mb-3">Readings</h2>
+            <p class="text-center mb-5">Before we meet I'll plot your chart from your birth details.  We then talk it through over Zoom, and you'll get a recording to return to afterwards.</p>
+            <div class="row g-4">
+                
+                {% for reading in featured_readings %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100">
+                        {% if reading.image %}
+                            <img src="{{ reading.image.url }}" class="card-img-top" alt="{{ reading.name }}">
+                        {% else %}
+                            <img src="{% static 'images/default-reading.jpg' %}" class="card-img-top" alt="{{ reading.name }}">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h2 class="card-title h4">{{ reading.name }}</h2>
+                            {% if not reading.is_active %}
+                                <span class="badge bg-secondary mb-2">Hidden from clients</span>
+                            {% endif %}
+                            <p class="card-text">{{ reading.summary }}</p>
+                            <p class="mt-auto mb-2">
+                                {{ reading.duration_minutes }} minutes &middot;
+                                <strong>&pound;{{ reading.price }}</strong>
+                            </p>
+                            <a href="{{ reading.get_absolute_url }}" class="btn btn-brand"
+                                aria-label="View {{ reading.name }}">View</a>
+                        </div>
+                    </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'reading_list' %}" class="btn btn-brand">See all readings</a>
+            </div>
+    </section>
+
+
+    <!-- testimonials section -->
+    <section id="testimonials" class="p-5">
+      <div class="container">
+        <h2 class="text-center text-white">Testimonials</h2>
+        <p class="text-center text-white mb-5">Please see the benefits my clients have found from receiving a
+          reading.</p>
+        <div class="row g-3">
+          <div class="col-md-6 col-lg-3">
+            <div class="card bg-light h-100">
+              <div class="card-body text-center">
+                <img src="{% static 'images/taurus-testimonial.webp' %}" class="rounded-circle bg-outlined"
+                  alt="Taurus symbol">
+                <h3 class="card-title mb-3">Alba, Taurus</h3>
+                <p class="card-text">
+                  "I was in my late 30s and working out how I wanted the next stage of my life to look and Rehanon was
+                  just able to hone in on the perfect timing for my career transition. She even predicted I would be
+                  moving
+                  in with my partner within the year. She was right!"
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card bg-light h-100">
+              <div class="card-body text-center">
+                <img src="{% static 'images/libra-testimonial.webp' %}" class="rounded-circle bg-outlined" alt="Libra symbol">
+                <h3 class="card-title mb-3">Matt, Libra</h3>
+                <p class="card-text">
+                  "A friend of mine had a reading from Rehanon and it piqued my interest so I booked for a birth chart
+                  reading. She was really able to tap into my strengths and challenges which enabled me to see how to
+                  best
+                  focus my energy. It finally gave me the push I needed to embrace the things I was passionate about and
+                  see how worthwhile that was."
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card bg-light h-100">
+              <div class="card-body text-center">
+                <img src="{% static 'images/sagittarius-testimonial.webp' %}" class="rounded-circle" alt="Sagittarius symbol">
+                <h3 class="card-title mb-3">G, Sagittarius</h3>
+                <p class="card-text">
+                  "On meeting with Rehanon I could just feel she had that wonderful combination of intuition and
+                  practicality. She read for me when I was just coming out of a period of poor health and she was able
+                  to
+                  give me really applicable advice around what I would need to move forward. It was so amazing to be so
+                  seen by someone who had only just met me."
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card bg-light h-100">
+              <div class="card-body text-center">
+                <img src="{% static 'images/pisces-testimonial.webp' %}" class="rounded-circle bg-outlined" alt="Pisces symbol">
+                <h3 class="card-title mb-3">Nick, Pisces</h3>
+                <p class="card-text">
+                  "My wife, Laura had a reading with Rehanon but it's not something I would normally do.
+                  However, I was really ready to move on job wise and I thought well it's worth a go. Rehanon explained
+                  everything in
+                  layman's terms and it actually made so much sense. It felt very much like project planning albeit with
+                  the
+                  stars."
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- contact section -->
+    <section id="contact" class="p-5">
+      <div class="container">
+        <form action="thank-you.html"
+       class="row g-3">
+          <h2 class="text-center">Get In Touch</h2>
+          <p class="text-center">If you are interested in a reading or have any other question for me then please don't
+            hesitate to contact me below and I will be in touch
+            with you as soon as possible. I very much look forward to meeting with you.</p>
+          <div class="col">
+            <label for="FirstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="FirstName" required>
+          </div>
+          <div class="col">
+            <label for="Email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="Email" required>
+          </div>
+          <div class="col-12 p-3">
+            <label for="Message" class="form-label">Message</label>
+            <textarea class="form-control" id="Message" rows="3"></textarea>
+          </div>
+          <div class="col-12">
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
 </div>
 {% endblock content %}

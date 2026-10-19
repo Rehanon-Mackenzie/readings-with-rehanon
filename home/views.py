@@ -1,9 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+from readings.models import ReadingType
 
 # Create your views here.
 
 
 def index(request):
-    """Display the home page."""
-    return render(request, 'home/index.html')
+    """Home page, showing a few active readings to browse."""
+    featured_readings = ReadingType.objects.filter(is_active=True)[:3]
+    return render(request, 'home/index.html',
+                  {'featured_readings': featured_readings})
