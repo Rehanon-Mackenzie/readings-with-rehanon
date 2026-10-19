@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from .models import AvailabilitySlot, Booking
 from readings.models import ReadingType
-from .forms import BookingForm
+from .forms import BookingForm, RescheduleForm
 
 
 def make_slot(days_ahead=3, hour=10):
@@ -124,24 +124,40 @@ class BookingModelTests(BookingTestSetup):
 class BookingFormTest(BookingTestSetup):
 
     def test_valid_form(self):
-        self.assertTrue(BookingForm(data=self.booking_data()).is_valid())
+        self.assertTrue(BookingForm(data=self.booking_data(), reading=self.reading).is_valid())
 
     def test_birth_time_is_optional(self):
-        form = BookingForm(data=self.booking_data(birth_time=''))
+        form = BookingForm(data=self.booking_data(birth_time=''), reading=self.reading)
         self.assertTrue(form.is_valid())
 
     def test_future_birth_data_rejected(self):
         tomorrow = (date.today() + timedelta(days=1)).isoformat()
-        form = BookingForm(data=self.booking_data(birth_date=tomorrow))
+        form = BookingForm(data=self.booking_data(birth_date=tomorrow), reading=self.reading)
         self.assertFalse(form.is_valid())
         self.assertIn('birth_date', form.errors)
 
     def test_booked_slot_rejected(self):
         self.slot.is_booked = True
         self.slot.save()
-        form = BookingForm(data=self.booking_data())
+        form = BookingForm(data=self.booking_data(), reading=self.reading)
         self.assertFalse(form.is_valid())
         self.assertIn('slot', form.errors)
+
+    def make_short_slot(self, minutes=45):
+        start = (timezone.now() + timedelta(days=4)).replace(
+            hour=10, minute=0, second=0, microsecond=0)
+        return AvailabilitySlot.objects.create(start_time=start, end_time=start + timedelta(minutes=minutes))
+
+    def test_slot_too_short_for_reading_rejected(self):
+        short = self.make_short_slot(45)
+        form = BookingForm(data=self.booking_data(slot=short.pk), reading=self.reading)
+        self.assertFalse(form.is_valid())
+        self.assertIn('slot', form.errors)
+
+    def test_slot_exactly_long_enough_accepted(self):
+        # self.slot is 60 minutes and the reading is 60 minutes
+        form = BookingForm(data=self.booking_data(), reading=self.reading)
+        self.assertTrue(form.is_valid())
 
 
 class BookReadingViewTests(BookingTestSetup):
@@ -283,7 +299,7 @@ class CancelBookingTests(BookingTestSetup):
 
 
 class RescheduledBookingTests(BookingTestSetup):
-    
+
     def setUp(self):
         super().setUp()
         self.booking = self.make_booking(self.user, self.slot)
@@ -328,6 +344,16 @@ class RescheduledBookingTests(BookingTestSetup):
         self.new_slot.save()
         self.login()
         self.client.post(self.url, {'slot': self.new_slot.pk})
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.slot, self.slot)
+
+    def test_cannot_move_to_slot_too_short(self):
+        start = (timezone.now() + timedelta(days=6)).replace(
+            hour=10, minute=0, second=0, microsecond=0)
+        short = AvailabilitySlot.objects.create(
+            start_time=start, end_time=start + timedelta(minutes=45))
+        self.login()
+        self.client.post(self.url, {'slot': short.pk})
         self.booking.refresh_from_db()
         self.assertEqual(self.booking.slot, self.slot)
 
