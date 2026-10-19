@@ -52,3 +52,16 @@ class RescheduleForm(forms.ModelForm):
         self.fields['slot'].queryset = AvailabilitySlot.objects.filter(
             is_booked=False, start_time__gt=timezone.now())
         self.fields['slot'].empty_label = 'Choose a new date and time'
+
+
+class SlotForm(forms.ModelForm):
+    class Meta:
+        model = AvailabilitySlot
+        fields = ['start_time', 'end_time']
+        labels = {'start_time': 'Starts', 'end_time': 'Ends'}
+        widgets = {
+            'start_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+            'end_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
+        }

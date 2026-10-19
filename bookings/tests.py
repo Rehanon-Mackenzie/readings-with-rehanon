@@ -339,7 +339,7 @@ class SlotManagementTests(BookingTestSetup):
         self.admin = User.objects.create_superuser(
             username='admin', email='admin@testing.com', password='testing123')
         self.list_url = reverse('manage_slots')
-        self.add_url = reverse(['add_slot'])
+        self.add_url = reverse('add_slot')
 
     def admin_login(self):
         self.client.login(username='admin', password='testing123')
@@ -384,4 +384,4 @@ class SlotManagementTests(BookingTestSetup):
         self.admin_login()
         url = reverse('delete_slot', args=[self.slot.pk])
         self.client.post(url)
-        self.assertTrue(AvailabilitySlot.objects.filter(pk=self.slot.pk).exists())
+        self.assertFalse(AvailabilitySlot.objects.filter(pk=self.slot.pk).exists())

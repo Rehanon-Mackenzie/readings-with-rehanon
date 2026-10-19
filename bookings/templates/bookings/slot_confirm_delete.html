@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h1 class="mb-3">Delete this slot?</h1>
+            <p>{{ slot }}</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, delete it</button>
+                <a href="{% url 'manage_slots' %}" class="btn btn-outline-secondary">Keep it</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

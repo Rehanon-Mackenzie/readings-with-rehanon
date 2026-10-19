@@ -6,8 +6,9 @@ from django.db.models import Q
 from django.utils import timezone
 
 from readings.models import ReadingType
-from .forms import BookingForm, RescheduleForm
-from .models import Booking
+from .forms import BookingForm, RescheduleForm, SlotForm
+from .models import Booking, AvailabilitySlot
+from readings.views import superuser_required
 
 
 @login_required
@@ -110,3 +111,39 @@ def reschedule_booking(request, pk):
 
     return render(request, 'bookings/reschedule_booking.html',
                   {'form': form, 'booking': booking})
+
+@superuser_required
+def manage_slots(request):
+    slots = AvailabilitySlot.objects.filter(start_time__gte=timezone.now())
+    return render(request, 'bookings/manage_slots.html', {'slots': slots})
+
+
+@superuser_required
+def add_slot(request):
+    if request.method == 'POST':
+        form = SlotForm(request.POST)
+        if form.is_valid():
+            slot = form.save()
+            messages.success(request, f'Slot added: {slot}.')
+            return redirect('manage_slots')
+        messages.error(request, 'Please check the form for errors.')
+    else:
+        form = SlotForm()
+    return render(request, 'bookings/slot_form.html', {'form': form})
+
+
+@superuser_required
+def delete_slot(request, pk):
+    slot = get_object_or_404(AvailabilitySlot, pk=pk)
+
+    if slot.bookings.exists():
+        messages.error(
+            request, "This slot has bookings linked to it, so it can't be deleted.")
+        return redirect('manage_slots')
+
+    if request.method == 'POST':
+        slot.delete()
+        messages.success(request, f'Slot deleted: {slot}.')
+        return redirect('manage_slots')
+
+    return render(request, 'bookings/slot_confirm_delete.html', {'slot': slot})

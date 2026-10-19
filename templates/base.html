@@ -52,6 +52,7 @@
                                 {% if user.is_authenticated %}
                                     {% if user.is_superuser %}
                                         <li><a href="{% url 'add_reading' %}" class="dropdown-item">Manage Readings</a></li>
+                                        <li><a href="{% url 'manage_slots' %}" class="dropdown-item">Manage Slots</a></li>
                                     {% endif %}
                                     <li><a href="{% url 'my_bookings' %}" class="dropdown-item">My Bookings</a></li>
                                     <li><a href="{% url 'account_logout' %}" class="dropdown-item">Log out</a></li>
