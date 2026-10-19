@@ -1,9 +1,21 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django import forms
 from django.utils import timezone
+from django.db.models import DurationField, ExpressionWrapper, F
 
 from .models import AvailabilitySlot, Booking
+
+def available_slots_for(reading):
+    """Free, future slots that are long enough for this reading."""
+    return AvailabilitySlot.objects.annotate(
+        length=ExpressionWrapper(
+            F('end_time') - F('start_time'), output_field=DurationField())
+    ).filter(
+        is_booked=False,
+        start_time__gt=timezone.now(),
+        length__gte=timedelta(minutes=reading.duration_minutes),
+    )
 
 
 class BookingForm(forms.ModelForm):
@@ -26,12 +38,9 @@ class BookingForm(forms.ModelForm):
             'question': forms.Textarea(attrs={'rows': 4}),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, reading, **kwargs):
         super().__init__(*args, **kwargs)
-        # Only offer free, future slots. This is set here (not in Meta)
-        # So "now" is worked out each time the form is made.
-        self.fields['slot'].queryset = AvailabilitySlot.objects.filter(
-            is_booked=False, start_time__gt=timezone.now())
+        self.fields['slot'].queryset = available_slots_for(reading)
         self.fields['slot'].empty_label = 'Choose a date and time'
 
     def clean_birth_date(self):
@@ -49,8 +58,8 @@ class RescheduleForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['slot'].queryset = AvailabilitySlot.objects.filter(
-            is_booked=False, start_time__gt=timezone.now())
+        self.fields['slot'].queryset = available_slots_for(
+            self.instance.reading_type)
         self.fields['slot'].empty_label = 'Choose a new date and time'
 
 

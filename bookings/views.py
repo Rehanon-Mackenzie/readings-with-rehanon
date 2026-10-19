@@ -16,7 +16,7 @@ def book_reading(request, slug):
     reading = get_object_or_404(ReadingType, slug=slug, is_active=True)
 
     if request.method == 'POST':
-        form = BookingForm(request.POST)
+        form = BookingForm(request.POST, reading=reading)
         if form.is_valid():
             try:
                 with transaction.atomic():
@@ -35,7 +35,7 @@ def book_reading(request, slug):
             return redirect('checkout', booking_id=booking.pk)
         messages.error(request, 'Please check the form for errors.')
     else:
-        form = BookingForm()
+        form = BookingForm(reading=reading)
 
     return render(request, 'bookings/book_reading.html',
                   {'form': form, 'reading': reading})
