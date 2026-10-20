@@ -26,3 +26,8 @@ class HomePageTests(TestCase):
         response = self.client.get(reverse('home'))
         self.assertContains(response, 'Log out')
         self.assertNotContains(response, 'Register')
+
+    def test_custom_404_page(self):
+        response = self.client.get('/no-such_page/')
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')

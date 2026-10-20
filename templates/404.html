@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="container my-5 text-center">
+        <h1 class="mb-3">Page not found</h1>
+        <p class="mb-4">This is all very mercury retrograde. This page is either moved or no longer exists.</p>
+        <a href="{% url 'home' %}" class="btn btn-brand me-2">Go to the home page</a>
+        <a href="{% url 'reading_list' %}" class="btn btn-outline-secondary">Browse readings</a>
+    </section>
+{% endblock content %}
