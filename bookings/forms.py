@@ -6,6 +6,7 @@ from django.db.models import DurationField, ExpressionWrapper, F
 
 from .models import AvailabilitySlot, Booking
 
+
 def available_slots_for(reading):
     """Free, future slots that are long enough for this reading."""
     return AvailabilitySlot.objects.annotate(
