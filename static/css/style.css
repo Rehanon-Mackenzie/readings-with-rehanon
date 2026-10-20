@@ -6,6 +6,8 @@
     --accent-pink: #e30b5c;
 }
 
+html { scroll-behavior: smooth;}
+
 #hero {
     background-image: url("../images/smoosh-hero-two.webp");
 }
@@ -45,6 +47,12 @@ footer a {
     margin: 0 0.5rem;
 }
 
+/* Profile Image */
+.profile-img {
+    max-width: 320px;
+    object-fit: cover;
+}
+
 /* Testimonials */
 #testimonials
 img {
@@ -58,7 +66,26 @@ img {
     min-height: 100px;
 }
 
+/* Back to top on home page */
+.back-to-top {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--primary-purple);
+    color: #fff;
+}
 
+.back-to-top:hover,
+.back-to-top:focus {
+    background-color: var(--accent-pink);
+    color: #fff;
+}
 /* Buttons */
 .btn-brand {
     background-color: var(--primary-purple);
