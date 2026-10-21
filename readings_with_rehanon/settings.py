@@ -201,7 +201,7 @@ STRIPE_CURRENCY = "gbp"
 
 LOGGING = {
     "version": 1,
-    "disable_exising_loggers": False,
+    "disable_existing_loggers": False,
     "handlers": {
         "console": {"class": "logging.StreamHandler"},
     },
