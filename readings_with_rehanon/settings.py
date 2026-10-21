@@ -171,11 +171,26 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
 # Print emails to the terminal during development
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+if os.environ.get("EMAIL_HOST_USER"):
+    MAILERS = {
+        'default': {
+            "BACKEND": 'django.core.mail.backends.console.EmailBackend',
+            "OPTIONS": {
+                "host": "smtp.gmail.com",
+                "use_tls": True,
+                "username": os.environ.get("EMAIL_HOST_USER"),
+                "password": os.environ.get("EMAIL_HOST_PASS"),
+            },
+        },
+    }
+    DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_HOST_USER")
+else:
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.console.EmailBackend",
+        },
+    }
+    DEFAULT_FROM_EMAIL = "noreply@readingswithrehanon.local"
 
 # Stripe
 
