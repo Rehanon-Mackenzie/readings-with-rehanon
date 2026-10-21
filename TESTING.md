@@ -44,3 +44,7 @@ All Python files were checked with flake8 locally and the CI Python Linter.
 All pass with no errors.
 
 ![flake8 clean output](documentation/testing/flake8-clean.png)
+
+| App | File | URL | Screenshot | Result |
+| --- | ---- | --- | ---------- | -------|
+| home | [tests.py](/home/tests.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/Rehanon-Mackenzie/readings-with-rehanon/refs/heads/main/home/tests.py) | ![home tests validation](documentation/testing/validators/home-tests-validation.png) | Pass |
