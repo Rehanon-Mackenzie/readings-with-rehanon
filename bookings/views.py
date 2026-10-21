@@ -28,7 +28,8 @@ def book_reading(request, slug):
                     booking.slot.save()
             except IntegrityError:
                 # Someone else booked this slot a moment earlier
-                messages.error(request, 'Sorry that time has just been taken. Please choose another.')
+                messages.error(
+                    request, 'Sorry that time has just been taken. Please choose another.')
                 return redirect('book_reading', slug=reading.slug)
             messages.success(
                 request, f'Your {reading.name} is held for {booking.slot} Please complete your payment to confirm it.')
@@ -53,6 +54,7 @@ def my_bookings(request):
     ).order_by('-slot__start_time')
 
     return render(request, 'bookings/my_bookings.html', {'upcoming': upcoming, 'past': past})
+
 
 @login_required
 def cancel_booking(request, pk):
@@ -101,7 +103,8 @@ def reschedule_booking(request, pk):
                     booking.slot.is_booked = True
                     booking.slot.save()
             except IntegrityError:
-                messages.error(request, 'Sorry that time has just been taken. Please choose another.')
+                messages.error(
+                    request, 'Sorry that time has just been taken. Please choose another.')
                 return redirect('reschedule_booking', pk=booking.pk)
             messages.success(
                 request, f'Your {booking.reading_type.name} has been moved to {booking.slot}.')
@@ -111,6 +114,7 @@ def reschedule_booking(request, pk):
 
     return render(request, 'bookings/reschedule_booking.html',
                   {'form': form, 'booking': booking})
+
 
 @superuser_required
 def manage_slots(request):

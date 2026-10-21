@@ -38,7 +38,8 @@ class AvailabilitySlotTests(TestCase):
 
     def test_slot_in_the_past_is_rejected(self):
         past = timezone.now() - timedelta(days=1)
-        slot = AvailabilitySlot(start_time=past, end_time=past + timedelta(hours=1))
+        slot = AvailabilitySlot(
+            start_time=past, end_time=past + timedelta(hours=1))
         with self.assertRaises(ValidationError):
             slot.full_clean()
 
@@ -53,7 +54,8 @@ class AvailabilitySlotTests(TestCase):
             end_time=self.start + timedelta(days=1, hours=1))
         earlier = AvailabilitySlot.objects.create(
             start_time=self.start, end_time=self.start + timedelta(hours=1))
-        self.assertEqual(list(AvailabilitySlot.objects.all()), [earlier, later])
+        self.assertEqual(list(AvailabilitySlot.objects.all()),
+                         [earlier, later])
 
 
 class BookingTestSetup(TestCase):
@@ -124,15 +126,18 @@ class BookingModelTests(BookingTestSetup):
 class BookingFormTest(BookingTestSetup):
 
     def test_valid_form(self):
-        self.assertTrue(BookingForm(data=self.booking_data(), reading=self.reading).is_valid())
+        self.assertTrue(BookingForm(data=self.booking_data(),
+                        reading=self.reading).is_valid())
 
     def test_birth_time_is_optional(self):
-        form = BookingForm(data=self.booking_data(birth_time=''), reading=self.reading)
+        form = BookingForm(data=self.booking_data(
+            birth_time=''), reading=self.reading)
         self.assertTrue(form.is_valid())
 
     def test_future_birth_data_rejected(self):
         tomorrow = (date.today() + timedelta(days=1)).isoformat()
-        form = BookingForm(data=self.booking_data(birth_date=tomorrow), reading=self.reading)
+        form = BookingForm(data=self.booking_data(
+            birth_date=tomorrow), reading=self.reading)
         self.assertFalse(form.is_valid())
         self.assertIn('birth_date', form.errors)
 
@@ -150,7 +155,8 @@ class BookingFormTest(BookingTestSetup):
 
     def test_slot_too_short_for_reading_rejected(self):
         short = self.make_short_slot(45)
-        form = BookingForm(data=self.booking_data(slot=short.pk), reading=self.reading)
+        form = BookingForm(data=self.booking_data(
+            slot=short.pk), reading=self.reading)
         self.assertFalse(form.is_valid())
         self.assertIn('slot', form.errors)
 
@@ -410,4 +416,5 @@ class SlotManagementTests(BookingTestSetup):
         self.admin_login()
         url = reverse('delete_slot', args=[self.slot.pk])
         self.client.post(url)
-        self.assertFalse(AvailabilitySlot.objects.filter(pk=self.slot.pk).exists())
+        self.assertFalse(AvailabilitySlot.objects.filter(
+            pk=self.slot.pk).exists())

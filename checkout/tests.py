@@ -111,7 +111,8 @@ class CheckoutSuccessTests(CheckoutTestSetup):
 
     @patch('checkout.views.stripe.PaymentIntent.retrieve')
     def test_unfinished_payment_does_not_confirm(self, mock_retrieve):
-        mock_retrieve.return_value = self.fake_intent(status='requires_payment_method')
+        mock_retrieve.return_value = self.fake_intent(
+            status='requires_payment_method')
         response = self.client.get(self.url, {'payment_intent': 'pi_test_1'})
         self.assertRedirects(
             response, reverse('checkout', args=[self.booking.pk]),

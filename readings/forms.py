@@ -26,5 +26,6 @@ class ReadingTypeForm(forms.ModelForm):
     def clean_duration_minutes(self):
         duration = self.cleaned_data['duration_minutes']
         if duration < 15 or duration > 180:
-            raise forms.ValidationError('Readings must be between 15 and 180 minutes long.')
+            raise forms.ValidationError(
+                'Readings must be between 15 and 180 minutes long.')
         return duration

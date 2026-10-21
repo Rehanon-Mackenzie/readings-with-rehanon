@@ -10,7 +10,6 @@ from bookings.models import Booking
 from .payments import confirm_booking_payment
 
 
-
 @login_required
 def checkout(request, booking_id):
     booking = get_object_or_404(
@@ -32,7 +31,7 @@ def checkout(request, booking_id):
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
         'client_secret': intent.client_secret,
         'return_url': return_url,
-        })
+    })
 
 
 @login_required
@@ -55,5 +54,6 @@ def checkout_success(request, booking_id):
             return render(request, 'checkout/checkout_success.html',
                           {'booking': booking, 'order': order})
 
-    messages.error(request, "We couldn't confirm your payment. Please try again.")
+    messages.error(
+        request, "We couldn't confirm your payment. Please try again.")
     return redirect('checkout', booking_id=booking.pk)

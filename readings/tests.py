@@ -14,6 +14,7 @@ class ReadingTypeModelTests(TestCase):
         reading = ReadingType(name='Birth Chart Reading')
         self.assertEqual(str(reading), 'Birth Chart Reading')
 
+
 class ReadingViewTests(TestCase):
     """Tests for the readings list and detail pages."""
 
@@ -47,16 +48,19 @@ class ReadingViewTests(TestCase):
         self.assertNotContains(response, 'Retired Reading')
 
     def test_detail_page_shows_the_reading(self):
-        response = self.client.get(reverse('reading_detail', args=['birth-chart-reading']))
+        response = self.client.get(
+            reverse('reading_detail', args=['birth-chart-reading']))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'A detailed look at your birth chart.')
 
     def test_detail_page_returns_404_for_inactive_reading(self):
-        response = self.client.get(reverse('reading_detail', args=['retired-reading']))
+        response = self.client.get(
+            reverse('reading_detail', args=['retired-reading']))
         self.assertEqual(response.status_code, 404)
 
     def test_detail_page_returns_404_for_unknown_reading(self):
-        response = self.client.get(reverse('reading_detail', args=['does-not-exist']))
+        response = self.client.get(
+            reverse('reading_detail', args=['does-not-exist']))
         self.assertEqual(response.status_code, 404)
 
 
@@ -112,7 +116,8 @@ class ReadingManagementTests(TestCase):
     def test_client_cannot_delete_a_reading(self):
         self.client.login(username='client', password='client123')
         self.client.post(reverse('delete_reading', args=[self.reading.slug]))
-        self.assertTrue(ReadingType.objects.filter(pk=self.reading.pk).exists())
+        self.assertTrue(ReadingType.objects.filter(
+            pk=self.reading.pk).exists())
 
     # Create
     def test_admin_can_add_a_reading(self):
@@ -126,28 +131,34 @@ class ReadingManagementTests(TestCase):
         data = {**self.valid_data, 'price': '-5.00'}
         response = self.client.post(reverse('add_reading'), data)
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(ReadingType.objects.filter(name='Solar Return Chart').exists())
+        self.assertFalse(ReadingType.objects.filter(
+            name='Solar Return Chart').exists())
 
     # Update
     def test_admin_can_edit_a_reading(self):
         self.client.login(username='admin', password='testing123')
-        data = {**self.valid_data, 'name': 'Birth Chart Reading', 'price': '90.00'}
-        self.client.post(reverse('edit_reading', args=[self.reading.slug]), data)
+        data = {**self.valid_data,
+                'name': 'Birth Chart Reading', 'price': '90.00'}
+        self.client.post(
+            reverse('edit_reading', args=[self.reading.slug]), data)
         self.reading.refresh_from_db()
         self.assertEqual(self.reading.price, Decimal('90.00'))
-    
+
     def test_edit_page_shows_existing_details(self):
         self.client.login(username='admin', password='testing123')
-        response = self.client.get(reverse('edit_reading', args=[self.reading.slug]))
+        response = self.client.get(
+            reverse('edit_reading', args=[self.reading.slug]))
         self.assertContains(response, 'Birth Chart Reading')
         self.assertContains(response, '85.00')
 
     # Delete
     def test_admin_can_delete_a_reading(self):
         self.client.login(username='admin', password='testing123')
-        response = self.client.post(reverse('delete_reading', args=[self.reading.slug]))
+        response = self.client.post(
+            reverse('delete_reading', args=[self.reading.slug]))
         self.assertRedirects(response, reverse('reading_list'))
-        self.assertFalse(ReadingType.objects.filter(pk=self.reading.pk).exists())
+        self.assertFalse(ReadingType.objects.filter(
+            pk=self.reading.pk).exists())
 
     # Hidden readings
     def test_admin_sees_hidden_readings_on_list(self):

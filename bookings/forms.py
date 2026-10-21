@@ -22,7 +22,8 @@ def available_slots_for(reading):
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = ['slot', 'birth_date', 'birth_time', 'birth_place', 'question']
+        fields = ['slot', 'birth_date',
+                  'birth_time', 'birth_place', 'question']
         labels = {
             'slot': 'Date and time',
             'birth_date': 'Date of birth',
@@ -47,7 +48,8 @@ class BookingForm(forms.ModelForm):
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         if birth_date > date.today():
-            raise forms.ValidationError("Date of birth can't be in the future?")
+            raise forms.ValidationError(
+                "Date of birth can't be in the future?")
         return birth_date
 
 

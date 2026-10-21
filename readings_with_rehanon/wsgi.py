@@ -11,6 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'readings_with_rehanon.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+                      'readings_with_rehanon.settings')
 
 application = get_wsgi_application()
