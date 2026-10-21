@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from .models import AvailabilitySlot, Booking
 from readings.models import ReadingType
-from .forms import BookingForm, RescheduleForm
+from .forms import BookingForm
 
 
 def make_slot(days_ahead=3, hour=10):
@@ -151,7 +151,9 @@ class BookingFormTest(BookingTestSetup):
     def make_short_slot(self, minutes=45):
         start = (timezone.now() + timedelta(days=4)).replace(
             hour=10, minute=0, second=0, microsecond=0)
-        return AvailabilitySlot.objects.create(start_time=start, end_time=start + timedelta(minutes=minutes))
+        return AvailabilitySlot.objects.create(
+            start_time=start,
+            end_time=start + timedelta(minutes=minutes))
 
     def test_slot_too_short_for_reading_rejected(self):
         short = self.make_short_slot(45)

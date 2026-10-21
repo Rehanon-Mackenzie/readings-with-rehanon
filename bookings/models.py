@@ -28,7 +28,8 @@ class AvailabilitySlot(models.Model):
 
     def clean(self):
         """Check the slot makes sense before it is saved."""
-        if self.start_time and self.end_time and self.end_time <= self.start_time:
+        if (self.start_time and self.end_time
+                and self.end_time <= self.start_time):
             raise ValidationError(
                 {'end_time': 'The end time must be after the start time.'})
         if self.start_time and self.start_time < timezone.now():
@@ -72,7 +73,8 @@ class Booking(models.Model):
         return f"{self.user.username} - {self.reading_type.name} - {self.slot}"
 
     def can_be_changed(self):
-        """Clients can cancel or reschedule more than 48 hours before the reading."""
+        """Clients can cancel or reschedule more than 48 hours before the
+        reading."""
         if self.status == 'cancelled':
             return False
         return self.slot.start_time - timezone.now() > CHANGE_CUTOFF

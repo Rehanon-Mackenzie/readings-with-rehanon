@@ -30,7 +30,8 @@ class ReadingType(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        """Create the slug from the name the first time the reading is saved."""
+        """Create the slug from the name the first time the reading
+        is saved."""
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)

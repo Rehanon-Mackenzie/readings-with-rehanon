@@ -29,10 +29,14 @@ def book_reading(request, slug):
             except IntegrityError:
                 # Someone else booked this slot a moment earlier
                 messages.error(
-                    request, 'Sorry that time has just been taken. Please choose another.')
+                    request,
+                    'Sorry that time has just been taken. '
+                    'Please choose another.')
                 return redirect('book_reading', slug=reading.slug)
             messages.success(
-                request, f'Your {reading.name} is held for {booking.slot} Please complete your payment to confirm it.')
+                request,
+                f'Your {reading.name} is held for {booking.slot}. '
+                'Please complete your payment to confirm it.')
             return redirect('checkout', booking_id=booking.pk)
         messages.error(request, 'Please check the form for errors.')
     else:
@@ -53,7 +57,9 @@ def my_bookings(request):
         Q(slot__start_time__lt=now) | Q(status='cancelled')
     ).order_by('-slot__start_time')
 
-    return render(request, 'bookings/my_bookings.html', {'upcoming': upcoming, 'past': past})
+    return render(
+        request,
+        'bookings/my_bookings.html', {'upcoming': upcoming, 'past': past})
 
 
 @login_required
@@ -63,7 +69,8 @@ def cancel_booking(request, pk):
     if not booking.can_be_changed():
         messages.error(
             request,
-            'Bookings can only be cancelled more than 48 hours before the reading.')
+            'Bookings can only be cancelled more than 48 hours '
+            'before the reading.')
         return redirect('my_bookings')
 
     if request.method == 'POST':
@@ -74,10 +81,12 @@ def cancel_booking(request, pk):
             booking.slot.save()
         messages.success(
             request,
-            f'Your {booking.reading_type.name} on {booking.slot} has been cancelled.')
+            f'Your {booking.reading_type.name} on {booking.slot} has been '
+            'cancelled.')
         return redirect('my_bookings')
 
-    return render(request, 'bookings/cancel_booking.html', {'booking': booking})
+    return render(request,
+                  'bookings/cancel_booking.html', {'booking': booking})
 
 
 @login_required
@@ -87,7 +96,8 @@ def reschedule_booking(request, pk):
     if not booking.can_be_changed():
         messages.error(
             request,
-            'Bookings can only be moved more than 48 hours before the reading.')
+            'Bookings can only be moved more than '
+            '48 hours before the reading.')
         return redirect('my_bookings')
 
     old_slot = booking.slot
@@ -104,10 +114,13 @@ def reschedule_booking(request, pk):
                     booking.slot.save()
             except IntegrityError:
                 messages.error(
-                    request, 'Sorry that time has just been taken. Please choose another.')
+                    request,
+                    'Sorry that time has just been taken. '
+                    'Please choose another.')
                 return redirect('reschedule_booking', pk=booking.pk)
             messages.success(
-                request, f'Your {booking.reading_type.name} has been moved to {booking.slot}.')
+                request, f'Your {booking.reading_type.name} has been moved to '
+                         f'{booking.slot}.')
             return redirect('my_bookings')
     else:
         form = RescheduleForm(instance=booking)
@@ -142,7 +155,8 @@ def delete_slot(request, pk):
 
     if slot.bookings.exists():
         messages.error(
-            request, "This slot has bookings linked to it, so it can't be deleted.")
+            request,
+            "This slot has bookings linked to it, so it can't be deleted.")
         return redirect('manage_slots')
 
     if request.method == 'POST':

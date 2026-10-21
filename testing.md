@@ -36,3 +36,11 @@
 | No cancel button within 48 hours| As admin added slot for 24 ahead. As a client, booked it and opened My Bookings | No cancel button; message "Less than 48 hours to go, so this booking can't be changed online." | Pass |
 | Other user can't cancel a booking | Logged in as another user typed `/bookings/5/cancel/` (the first client's booking) | 404 page with "No Booking matches the given query" | Pass |
 
+## Validation Testing
+
+### Python (PEP8)
+
+All Python files were checked with flake8 locally and the CI Python Linter.
+All pass with no errors.
+
+![flake8 clean output](documentation/testing/flake8-clean.png)

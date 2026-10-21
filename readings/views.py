@@ -22,7 +22,8 @@ def superuser_required(view_func):
 
 
 def visible_readings(user):
-    """The site owner sees every reading and everyone else only sees active ones."""
+    """The site owner sees every reading;
+    and everyone else only sees active ones."""
     if user.is_superuser:
         return ReadingType.objects.all()
     return ReadingType.objects.filter(is_active=True)
@@ -31,13 +32,17 @@ def visible_readings(user):
 def reading_list(request):
     """Display the readings."""
     readings = visible_readings(request.user)
-    return render(request, 'readings/reading_list.html', {'readings': readings})
+    return render(
+        request,
+        'readings/reading_list.html', {'readings': readings})
 
 
 def reading_detail(request, slug):
     """Display a single reading."""
     reading = get_object_or_404(visible_readings(request.user), slug=slug)
-    return render(request, 'readings/reading_detail.html', {'reading': reading})
+    return render(
+        request,
+        'readings/reading_detail.html', {'reading': reading})
 
 
 @superuser_required
@@ -87,4 +92,7 @@ def delete_reading(request, slug):
         reading.delete()
         messages.success(request, f'"{name}" has been deleted.')
         return redirect('reading_list')
-    return render(request, 'readings/reading_confirm_delete.html', {'reading': reading})
+    return render(
+        request,
+        'readings/reading_confirm_delete.html',
+        {'reading': reading})

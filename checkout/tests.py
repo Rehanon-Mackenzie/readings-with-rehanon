@@ -18,7 +18,8 @@ class CheckoutTestSetup(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
-            username='client', email='client@testing.com', password='testing123')
+            username='client', email='client@testing.com',
+            password='testing123')
         reading = ReadingType.objects.create(
             name='Birth Chart', summary='Your natal chart',
             description='Full reading', price=85, duration_minutes=60,)
@@ -34,7 +35,8 @@ class OrderTests(CheckoutTestSetup):
 
     def test_order_number_generated(self):
         order = Order.objects.create(
-            booking=self.booking, amount=Decimal('85.00'), stripe_pid='pi_test_1')
+            booking=self.booking, amount=Decimal('85.00'),
+            stripe_pid='pi_test_1')
         self.assertEqual(len(order.order_number), 12)
 
     def test_confirm_payment_creates_order_and_confirms_booking(self):

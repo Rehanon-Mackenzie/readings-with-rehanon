@@ -31,7 +31,9 @@ class BookingForm(forms.ModelForm):
             'question': 'Anything you would like me to focus on?'
         }
         help_texts = {
-            'birth_date': 'Booking as a gift? Enter their birth details instead.',
+            'birth_date': (
+                'Booking as a gift? Enter their birth details instead.',
+            ),
             'birth_time': 'Optional, but it makes the reading more accurate.',
         }
         widgets = {
