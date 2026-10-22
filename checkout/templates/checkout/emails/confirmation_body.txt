@@ -1,12 +1,12 @@
 {% autoescape off %}Hi {{ booking.user.username }},
-Thank you for your your booking with Readings with Rehanon. Your reading is confirmed.
+Thank you for your booking with Readings with Rehanon. Your reading is confirmed.
 
 Reading: {{ booking.reading_type.name}}
 Date and time: {{ booking.slot }}
 Paid: £{{ order.amount }}
 Order number: {{ order.order_number }}
 
-You can reschedule or cancel from My Bookings up to 48 hours before your booking.reading_type.name
+You can reschedule or cancel from My Bookings up to 48 hours before your {{ booking.reading_type.name }}
 
 Best wishes,
 Rehanon
