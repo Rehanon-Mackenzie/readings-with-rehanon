@@ -133,7 +133,7 @@ def reschedule_booking(request, pk):
 def manage_slots(request):
     slots = AvailabilitySlot.objects.filter(
         start_time__gte=timezone.now()).annotate(
-            booking_count=Count('bookings'))
+            booking_count=Count('bookings')).order_by('start_time')
     return render(request, 'bookings/manage_slots.html', {'slots': slots})
 
 
