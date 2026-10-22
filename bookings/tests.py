@@ -122,6 +122,26 @@ class BookingModelTests(BookingTestSetup):
         self.create_booking()
         self.assertEqual(Booking.objects.filter(slot=self.slot).count(), 2)
 
+    def test_cancelling_booking_frees_slot(self):
+        booking = self.create_booking()
+        booking.status = 'cancelled'
+        booking.save()
+        self.slot.refresh_from_db()
+        self.assertFalse(self.slot.is_booked)
+
+    def test_active_booking_marks_slot_booked(self):
+        self.create_booking()
+        self.slot.refresh_from_db()
+        self.assertTrue(self.slot.is_booked)
+
+    def test_editing_old_cancelled_booking_keeps_slot_booked(self):
+        old = self.create_booking(status='cancelled')
+        self.create_booking()  # a new active booking in the same slot
+        old.question = 'Updated'
+        old.save()
+        self.slot.refresh_from_db()
+        self.assertTrue(self.slot.is_booked)
+
 
 class BookingFormTest(BookingTestSetup):
 

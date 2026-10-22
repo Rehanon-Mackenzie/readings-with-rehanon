@@ -78,3 +78,13 @@ class Booking(models.Model):
         if self.status == 'cancelled':
             return False
         return self.slot.start_time - timezone.now() > CHANGE_CUTOFF
+
+    def save(self, *args, **kwargs):
+        """Save, then keep the slot's is_booked flag in step,
+        whether the booking was changed on the site , in the admin
+        or by the Stripe webhook."""
+        super().save(*args, **kwargs)
+        booked = self.slot.bookings.exclude(status='cancelled').exists()
+        if self.slot.is_booked != booked:
+            self.slot.is_booked = booked
+            self.slot.save(update_fields=['is_booked'])
