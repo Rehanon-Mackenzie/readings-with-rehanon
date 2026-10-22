@@ -6,15 +6,24 @@ from decimal import Decimal
 
 from .models import Order
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def send_confirmation_email(order):
-    """Email the client a summary of their confirmed booking."""
-    context = {'order': order, 'booking': order.booking}
-    subject = render_to_string(
-        'checkout/emails/confirmation_subject.txt', context).strip()
-    body = render_to_string('checkout/emails/confirmation_body.txt', context)
-    send_mail(subject, body, None, [order.booking.user.email],
-              fail_silently=True)
+    """Email the client a summary of their confirmed booking.
+    Any email problem is logged, never allowed to break the payment."""
+    try:
+        context = {'order': order, 'booking': order.booking}
+        subject = render_to_string(
+            'checkout/emails/confirmation_subject.txt', context).strip()
+        body = render_to_string(
+            'checkout/emails/confirmation_body.txt', context)
+        send_mail(subject, body, None, [order.booking.user.email])
+    except Exception:
+        logger.exception(
+            'Confirmation email failed for order %s', order.order_number)
 
 
 def confirm_booking_payment(booking, payment_intent_id, amount_pence):

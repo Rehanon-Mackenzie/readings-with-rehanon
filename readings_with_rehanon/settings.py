@@ -174,7 +174,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 if os.environ.get("EMAIL_HOST_USER"):
     MAILERS = {
         'default': {
-            "BACKEND": 'django.core.mail.backends.console.EmailBackend',
+            "BACKEND": 'django.core.mail.backends.smtp.EmailBackend',
             "OPTIONS": {
                 "host": "smtp.gmail.com",
                 "use_tls": True,
