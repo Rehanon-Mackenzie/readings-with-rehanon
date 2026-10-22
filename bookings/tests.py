@@ -420,3 +420,10 @@ class SlotManagementTests(BookingTestSetup):
         self.client.post(url)
         self.assertFalse(AvailabilitySlot.objects.filter(
             pk=self.slot.pk).exists())
+
+    def test_delete_button_hidden_for_slot_with_cancelled_booking(self):
+        self.make_booking(self.user, self.slot, status='cancelled')
+        self.admin_login()
+        response = self.client.get(self.list_url)
+        self.assertNotContains(
+            response, reverse('delete_slot', args=[self.slot.pk]))

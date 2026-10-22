@@ -28,8 +28,10 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-end">
-                                    {% if not slot.is_booked %}
-                                        <a href="{% url 'delete_slot' slot.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    {% if slot.booking_count == 0 %}
+                                        <a href="{% url 'delete_slot' slot.pk %}" class="btn btn-sm btn-outline-danger">Eelete</a>   
+                                    {% else %}
+                                        <span class="small-text-muted">Has booking history</span>
                                     {% endif %}
                                 </td>
                             </tr>

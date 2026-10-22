@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.utils import timezone
 
 from readings.models import ReadingType
@@ -131,7 +131,9 @@ def reschedule_booking(request, pk):
 
 @superuser_required
 def manage_slots(request):
-    slots = AvailabilitySlot.objects.filter(start_time__gte=timezone.now())
+    slots = AvailabilitySlot.objects.filter(
+        start_time__gte=timezone.now()).annotate(
+            booking_count=Count('bookings'))
     return render(request, 'bookings/manage_slots.html', {'slots': slots})
 
 
