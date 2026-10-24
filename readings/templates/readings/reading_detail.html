@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load cloudinary %}
 {% load static %}
 
 
@@ -12,7 +13,7 @@
     <div class="row align-items-center">
         <div class="col-12 col-md-6 col-lg-5 mb-4">
                 {% if reading.image %}
-                    <img src="{{ reading.image.url }}" class="card-img-top" alt="Illustration for the {{ reading.name }}">
+                    <img src="{% cloudinary_url reading.image width=600 crop='limit' quality='auto' fetch_format='auto' %}" class="card-img-top" alt="Illustration for the {{ reading.name }}" loading="lazy">
                 {% else %}
                    <img src="{% static 'images/default-reading.jpg' %}" class="card-img-top" alt="Illustration for the {{ reading.name }}">
                 {% endif %}
