@@ -13,8 +13,11 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 import os
 import sys
 import dj_database_url
+
 if os.path.isfile("env.py"):
     import env  # noqa: F401 (loads environment variables)
+
+import cloudinary  # noqa: E402 (must load after env.py sets CLOUDINARY_URL)
 
 from pathlib import Path
 
@@ -198,6 +201,9 @@ STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_WH_SECRET = os.environ.get("STRIPE_WH_SECRET", "")
 STRIPE_CURRENCY = "gbp"
+
+#  Cloudinary: always build https image URLS (avoids mixed content warnings)
+cloudinary.config(secure=True)
 
 LOGGING = {
     "version": 1,
