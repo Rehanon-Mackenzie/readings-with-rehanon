@@ -19,6 +19,7 @@
 | `test_slot_cannot_have_two_active_bookings` failed: the database allowed two active bookings on the same slot | The `UniqueConstraint` condition was written as Q(status='cancelled') instead of `~Q(status='cancelled')`. Without the `~` (NOT), the rule only applied to cancelled bookings. | Added the `~`. The test still failed, because the migration kept the old rule: the learning was that tests build their database from the migrations not the `models.py`. Therefore, I rolled back, deleted and unapplied the migration and ran `makemigrations` and `migrate` again. All tests passed. |
 | `TemplatedDoesNotExist: bookings/book_readings.html` | Typo in the template name in the view. | Corrected it to `bookings/book_reading.html`. |
 | `test_successful_payment_confirms_booking` failed: "No templates used to render the response" | Two mistakes in the test, not the view: the fake payment's status was misspelt, `suceeded`, and the line giving the mock return its value (`mock_retrieve.return_value = self.fake_intent()`) was missed out. The view correctly treated the fake payment as unpaid. | Corrected the spelling and added the missing line. | 
+| W3C warning "Empty heading" on the checkout success page: the reading name wasn't showing | Typo in the template variable (`book.reading_type.name`), which Django renders as blank without raising an error | Corrected to `booking.reading_type.name` and re-validated |
 
 
 ## Manual Testing
@@ -54,26 +55,32 @@ I have used the recommended [HTML W3C Validator](https://validator.w3.org/) to v
 
 | File | URL |Screenshot | Notes|
 |----- | --- | --------- | ---- |
-| [home.html](/templates/home.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F) | ![Home Page](documentation/testing/validators/home-validation.png) | |
-| [reading_list.html](readings/templates/readings/reading_list.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2F) | ![Reading list](documentation/testing/validators/reading-list-validation.png) |  |
-| [reading_detail.html](readings/templates/readings/reading_detail.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2Fbirth-chart) | ![Reading detail](documentation/testing/validators/reading-detail-validation.png) | |
-| [login.html](templates/account/login.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Flogin%2F) | ![Login](documentation/testing/validators/html-login-validation.png) | |
-| [signup.html](templates/account/signup.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Fsignup%2F) | ![Signup](documentation/testing/validators/html-signup-validation.png) | |
-| [404.html](templates/404.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F404#textarea) | ![404](documentation/testing/validators/html-404-validation.png) | |
-| [book_reading.html](bookings/templates/bookings/book_reading.html) | Direct Input | ![Book reading](documentation/testing/validators/html-book-a-reading-validation.png) | |
-| [cancel_booking.html](bookings/templates/bookings/cancel_booking.html) | Direct Input | ![Cancel booking](documentation/testing/validators/html-cancel-booking-validation.png) | |
-| [reschedule_booking.html](bookings/templates/bookings/reschedule_booking.html) | Direct Input | ![Reschedule booking](documentation/testing/validators/html-reschedule-booking-validation.png) | |
-| [checkout.html](checkout/templates/checkout/checkout.html) | Direct Input | ![Checkout](documentation/testing/validators/html-checkout-validation.png) | |
-| [checkout_success.html](checkout/templates/checkout/checkout_success.html) | Direct Input | ![Checkout success]()
+| [home.html](/templates/home.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F) | ![Home Page](documentation/testing/validators/home-validation.png) | Pass |
+| [reading_list.html](readings/templates/readings/reading_list.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2F) | ![Reading list](documentation/testing/validators/reading-list-validation.png) | Pass |
+| [reading_detail.html](readings/templates/readings/reading_detail.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2Fbirth-chart) | ![Reading detail](documentation/testing/validators/reading-detail-validation.png) | Pass |
+| [login.html](templates/account/login.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Flogin%2F) | ![Login](documentation/testing/validators/html-login-validation.png) | Pass |
+| [signup.html](templates/account/signup.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Fsignup%2F) | ![Signup](documentation/testing/validators/html-signup-validation.png) | Pass |
+| [404.html](templates/404.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F404#textarea) | ![404](documentation/testing/validators/html-404-validation.png) | Pass |
+| [book_reading.html](bookings/templates/bookings/book_reading.html) | Direct Input | ![Book reading](documentation/testing/validators/html-book-a-reading-validation.png) | Pass |
+| [cancel_booking.html](bookings/templates/bookings/cancel_booking.html) | Direct Input | ![Cancel booking](documentation/testing/validators/html-cancel-booking-validation.png) |Pass |
+| [reschedule_booking.html](bookings/templates/bookings/reschedule_booking.html) | Direct Input | ![Reschedule booking](documentation/testing/validators/html-reschedule-booking-validation.png) | Pass |
+| [checkout.html](checkout/templates/checkout/checkout.html) | Direct Input | ![Checkout](documentation/testing/validators/html-checkout-validation.png) | Pass |
+| [checkout_success.html](checkout/templates/checkout/checkout_success.html) | Direct Input | ![Checkout success](documentation/testing/validators/html-checkout-success-validation.png) | Pass |
+| [manage_slots.html](bookings/templates/bookings/manage_slots.html) | Direct Input | ![Manage slots](documentation/testing/validators/html-manage-slots-validation.png) | Pass |
+| [reading_form.html](readings/templates/readings/reading_form.html) | Direct Input | ![Reading form](documentation/testing/validators/html-reading-form-validation.png) | Pass |
 
 
 ### CSS
 I have used the recommended [CSS Jigsaw Validator](https://jigsaw.w3.org/css-validator) to validate all of my CSS files.
-| Directory | File | URL |Screenshot | Notes|
-|----|----|----|----|----|
-| | [style.css](/static/css/style.css) | [CSS Validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Frep-register-0917d4849eb9.herokuapp.com%2Fstatic%2Fcss%2Fstyle.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en) | ![CSS Validation](/documentation/validation/CSS-validation.PNG) | |
+| File | URL |Screenshot | Result |
+|----|----|----|----|
+| [style.css](static/css/style.css) | [CSS Validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Fstatic%2Fcss%2Fstyle.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en) | ![CSS Validation](documentation/testing/validators/css-validation.png) | Pass |
 
+### JavaScript (JSHint)
 
+| File | Screenshot | Result |
+| ---- | ---------- | ---- |
+| [stripe_payment.js](checkout/static/checkout/js/stripe_payment.js) | ![Stripe paynent js](documentation/testing/validators/js-stripe-payment-validation.png) | Pass |
 ### Python (PEP8)
 
 All Python files were checked with flake8 locally and the CI Python Linter.
