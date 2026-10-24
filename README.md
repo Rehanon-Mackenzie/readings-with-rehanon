@@ -1,6 +1,6 @@
 # Readings with Rehanon
 
-<!-- TODO: responsive mockup screenshot (amiresponsive or similar) -->
+
 
 [View the live site](https://readings-with-rehanon-392f3147072a.herokuapp.com/)
 
@@ -70,7 +70,7 @@ It also helps me manage my time more effectively, as I can post the times I am a
 
 * People who are interested in astrology and tarot who want a personal reading.
 * Returning clients who want to book again and manage their appointments.
-* People buying a reading a gift, using someone else's birth details.
+* People buying a reading as a gift, using someone else's birth details.
 * The site owner (me), who needs to manage readings and available times without using the Django admin.
 
 ### The 5 Planes of UX
@@ -80,7 +80,7 @@ It also helps me manage my time more effectively, as I can post the times I am a
 **Purpose**
 * Advertise the services offered
 * Enable users to book and pay for the services
-* Display client reviews to encourage perspective clients to book
+* Display client reviews to encourage prospective clients to book
 
 **Primary User Needs**
 * Find out what readings are offered, what they include and what they cost.
@@ -128,11 +128,10 @@ It also helps me manage my time more effectively, as I can post the times I am a
 #### 5. Surface
 
 **Visual Design Elements**
-- **[Colours](#colour-scheme)** (see below)
-- **[Typography](#typography)** (see below)
+- **[Colours and typography](#colour-scheme--typography)** (see below)
 
 ### Agile Methodology
-This section documents the decisions made in the planning phase of the build. I applied Agile methodology to plan this build. Specifically, I used GitHub Issues and a Kanban board to plan out the requirements and worked with MoSCoW prioritisation method to create a minimum viable product. This allowed me to think of what was absolute necessary in this iteration of the app and what could be developed in future versions.
+This section documents the decisions made in the planning phase of the build. I applied Agile methodology to plan this build. Specifically, I used GitHub Issues and a Kanban board to plan out the requirements and worked with MoSCoW prioritisation method to create a minimum viable product. This allowed me to think of what was absolutely necessary in this iteration of the app and what could be developed in future versions.
 
 **Start of project (27 September 2026)**
 ![Kanban board at the start of the project](documentation/planning/kanban-board-start.png)
@@ -156,7 +155,7 @@ MoSCoW prioritisation was used to keep the project in scope:
 | 3 | client | choose an available date and time and enter my birth details | my reading is booked and prepared | ![Must Have](https://img.shields.io/badge/Must_Have-brightgreen)|
 | 4 | client | pay securely by card and see a clear result | I know my booking is confirmed | ![Must Have](https://img.shields.io/badge/Must_Have-brightgreen)|
 | 5 | client | view my upcoming and past bookings | I can keep track of my appointments | ![Must Have](https://img.shields.io/badge/Must_Have-brightgreen)|
-| 6 | client | reschedule or cancel more than 24 hours ahead | I can fit readings around my plans | ![Must Have](https://img.shields.io/badge/Must_Have-brightgreen) |
+| 6 | client | reschedule or cancel more than 48 hours ahead | I can fit readings around my plans | ![Must Have](https://img.shields.io/badge/Must_Have-brightgreen) |
 | 7 | site owner (admin) | add, edit and remove reading types and slots on the site | I can run my business without the Django admin | ![Must Have](https://img.shields.io/badge/Must_Have-brightgreen) |
 | 8 | client | know nobody else can see or change my bookings | my personal details stay private | ![Must Have](https://img.shields.io/badge/Must_Have-brightgreen) |
 | 9 | client | get a confirmation email after paying | I have a record of my booking |  ![Should Have](https://img.shields.io/badge/Should_Have-9e0ae0) |
@@ -169,10 +168,9 @@ MoSCoW prioritisation was used to keep the project in scope:
 | 16 | gift voucher recipient | use my voucher on the site | I can choose which reading I want to receive | ![won't Have](https://img.shields.io/badge/Wont_Have-390820) |
 
 All Must Have stories, and Should Have stories 9 and 11, were built in this version. Story 13 is met by the booking form, which accepts anyone's birth details and tells the client so. Stories 10 and 12 were not built in this version and have moved to [Future Features](#future-features)
-<!-- TODO: link each story to its GitHub Issue. User story testing lives in TESTING.md. -->
 
 ## Design
-I began sketching the project out on paper and writing out the different components in psuedo code to get an overall view of what I wanted to created.  Once I had the app's requirements from the planning stage I then started to design the build. This included capturing what data would be stored in the back-end of the app and how it would be organised in an Entity Relationship (ERD).
+I began sketching the project out on paper and writing out the different components in pseudocode to get an overall view of what I wanted to create.  Once I had the app's requirements from the planning stage I then started to design the build. This included capturing what data would be stored in the back-end of the app and how it would be organised in an Entity Relationship Diagram (ERD).
 
 Once I had clarified this I then documented the flow of the app and used this to design the user interface.
 
@@ -180,12 +178,12 @@ Once I had clarified this I then documented the flow of the app and used this to
 
 I have carried the colour scheme over from my static site for brand consistency and the decisions behind the colour choices remain the same.  
 
-​I chose these colours because they are closely associated with spirituality specifically the chakra points. These include purple for the crown chakra which is associated with higher wisdom. Blue through the throat chakra and speaking from a place of wisdom. Finally, raspberry pink is associated with passion, excitement and creativity which is always what I hope a birth chart reading will give to people especially when they come for one when they are at a significant cross roads in their life.
+​I chose these colours because they are closely associated with spirituality specifically the chakra points. These include purple for the crown chakra which is associated with higher wisdom. Blue through the throat chakra and speaking from a place of wisdom. Finally, raspberry pink is associated with passion, excitement and creativity which is always what I hope a birth chart reading will give to people especially when they come for one when they are at a significant crossroads in their life.
 
 | Colour | Hex | Use |
 | ------ | --- | --- |
 | Purple (crown chakra) | `#32174d` | Navbar, footer, buttons |
-| Blue (throat chakra)| `#63b4da` | Accents |
+| Blue (throat chakra)| `#63b4d1` | Accents |
 | Raspberry pink (passion and creativity) | `#e30b5c` | Button hover and highlights |
 
 ![Colour Palette](documentation/planning/colour-palette.png)
@@ -195,14 +193,12 @@ I have carried the colour scheme over from my static site for brand consistency 
 
 ### Wireframes
 
-<!-- TODO: Balsamiq wireframes for mobile / tablet / desktop: home, readings list, reading detail, booking form, checkout, my bookings, admin management pages. Note any changes made during development and why. -->
-
 I used [Balsamiq](https://balsamiq.com/) to plan the layout of the GUI and determine what templates were needed.
 
 | Device | Page | Layout |
 | ------ | ---- | ------ |
 | Desktop | Home | ![home desktop wireframe](documentation/wireframes/home-desktop.png) |
-| Desktop | Readings | ![readings destktop wireframe](documentation/wireframes/readings-desktop.png) |
+| Desktop | Readings | ![readings desktop wireframe](documentation/wireframes/readings-desktop.png) |
 | Desktop | Reading Details | ![reading details wireframe](documentation/wireframes/reading-detail-desktop.png) |
 | Desktop | Booking | ![booking desktop wireframe](documentation/wireframes/booking-desktop.png) |
 | Desktop | Checkout | ![checkout desktop wireframe](documentation/wireframes/checkout-desktop.png) |
@@ -217,17 +213,13 @@ The project is split into apps so that each one holds a set of models and views 
 | App | Purpose |
 | --- | --- |
 | `home` | Landing page, about section, featured readings, custom 404 page |
-| `readings` | Reading types on offer (list, detail, and dd, edit, hide and delete for the site owner) |
+| `readings` | Reading types on offer (list, detail, and add, edit, hide and delete for the site owner) |
 | `bookings` | Available slots and client bookings (book, view, reschedule, cancel), and slot management for the site owner |
 | `checkout` | Stripe payment, orders, webhook handling, confirmation emails |
 
 ### Database Schema
 
 ![Database ERD](/documentation/diagrams/ERD-readings-with-rehanon.png)
-
-<!-- TODO: ERD image (e.g. dbdiagram.io / Lucidchart / draw.io) -->
-
-<!-- For merit criterion M(v): describe every model in full. One table per model, as below. -->
 
 #### ReadingType
 
@@ -280,17 +272,6 @@ A conditional `UniqueConstraint` allows only booking per slot that isn't cancell
 
 ### Booking & Payment Flowchart
 
-| Field | Type | Notes |
-| --- | --- | --- |
-| user | OneToOneField → User | created automatically on registration |
-| default_birth_date | DateField | optional |
-| default_birth_time | TimeField | optional |
-| default_birth_place | CharField | optional |
-
-<!-- TODO: Review table if implemented. Update all tables to match the final models. -->
-
-### Booking & Payment Flowchart
-
 I used [Mermaid Editor](https://www.mermaideditor.io/) to create the flowchart, which GitHub renders using [Mermaid](https://mermaid.js.org/) that is clearer.
 
 ```mermaid
@@ -323,7 +304,7 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 | Feature | Notes | Screenshot | User Story |
 |----|----|----| ---- |
 | Favicon | The favicon is a small image that displays in the browser tab. The intention is to enhance the user experience for those who have multiple tabs open and cannot read the text in the tabs.  I carried over the planet mercury icon from my first project for its astrological relevance. | ![favicon](/documentation/features/favicon.png) |  |
-| Navbar and footer | lnk to Home, About, Readings and Contact on every page. The My Account menu changes for visitors, clients and the site owner. The footer links to my social media. | ![navbar](documentation/features/navbar-desktop.png) ![footer](documentation/features/footer.png)| 1, 2 |
+| Navbar and footer | Links to Home, About, Readings and Contact on every page. The My Account menu changes for visitors, clients and the site owner. The footer links to my social media. | ![navbar](documentation/features/navbar-desktop.png) ![footer](documentation/features/footer.png)| 1, 2 |
 | Home page | Hero, about me, featured readings pulled from the database, client testimonials and contact details. | ![home page](/documentation/features/home-page.png) | 1 |
 | Readings list | Cards for each reading with an image, summary, duration and price. | ![reading list]() | 1 |
 |Reading detail | Full description, duration, price and a Book this reading button. | ![reading detail](documentation/features/reading-detail.png) | 1, 3 |
@@ -338,11 +319,9 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 | Reschedule | Move a booking to another free time that fits the reading, up to 48 hours before your appointment. | ![Reschedule](documentation/features/reschedule.png)| 6 |
 | Cancel | Confirmation page before cancelling. The time is released for other clients. | ![Cancel](documentation/features/cancel.png) | 6 |
 | Manage Readings | The site owner can add, edit, hide and delete readings, including images. | ![Manage readings](documentation/features/manage-readings.png)| 7 |
-| Manage Slots | The site owner can add and delete available times. Slots show Free or Booked, and slots with booking history can't be deleted. | ![Manage slots](documentation/features/manage-slots.png) | 7 \
+| Manage Slots | The site owner can add and delete available times. Slots show Free or Booked, and slots with booking history can't be deleted. | ![Manage slots](documentation/features/manage-slots.png) | 7 |
 | Messages | Success and error messages confirm every action. | ![messages](documentation/features/success-login-message.png) | 2-7 |
 | 404 page | A friendly page with links back to the home page and the readings. | ![404 page](/documentation/features/404-page.png) | 11 |
-
-
 
 ### Future Features
 
@@ -357,13 +336,11 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 
 ## Business Logic
 
-<!-- TODO: explain the custom Python logic and where it lives (models / forms / views). -->
-
 * **Double-booking prevention:** a database `UniqueConstraint` on `Booking` allows only one booking per slot that isn't cancelled (`condition=~Q(status='cancelled')`). The booking is saved and the slot is marked as booked inside a single transaction, and if two people submit at the same moment the `IntegrityError` is caught and the second person is asked to choose another time. 
-* **Slots must fit the reading:** `available_slots_for()` in `bookings/forms.py` only offers free, future slots that are at least as long as the chosen reading, with the length worked out in the database using `F()` expressions. I added this after manual tested showed a 45-minute slot could be booked for a 70-minute reading.
-* **Slot availability stays correct:** `Booking.save()` keeps each slot's `is_booked` flag in step with it's bookings, so it is correct however a booking is changed: on the site, in Django admin or by the Stripe webhook.
-* **48-hour rule:** `Booking.can_be_changed()` in `bookings.models.py` returns `False` for cancelled bookings and bookings starting within 48 hours. The Cancel and Reschedule buttons both views use this one method, so the rule lives in one place.
-* **Payment confirmation:** bookings start as *pending* and only become *confirmed* through `confirming_booking_payment()` in `checkout/payments.py`. Both the success page and the Stripe webhook call it, and `get_or_create` makes it safe to run twice: one order, one email.
+* **Slots must fit the reading:** `available_slots_for()` in `bookings/forms.py` only offers free, future slots that are at least as long as the chosen reading, with the length worked out in the database using `F()` expressions. I added this after manual testing showed a 45-minute slot could be booked for a 70-minute reading.
+* **Slot availability stays correct:** `Booking.save()` keeps each slot's `is_booked` flag in step with its bookings, so it is correct however a booking is changed: on the site, in Django admin or by the Stripe webhook.
+* **48-hour rule:** `Booking.can_be_changed()` in `bookings/models.py` returns `False` for cancelled bookings and bookings starting within 48 hours. The Cancel and Reschedule buttons and both views use this one method, so the rule lives in one place.
+* **Payment confirmation:** bookings start as *pending* and only become *confirmed* through `confirm_booking_payment()` in `checkout/payments.py`. Both the success page and the Stripe webhook call it, and `get_or_create` makes it safe to run twice: one order, one email.
 *  **Validation:** birth dates can't be in the future, birth time is optional, and `AvailabilitySlot.clean()` stops slots ending before they start or being added in the past.
 * **Slot management:** slots with any booking history can't be deleted, which keeps records intact.
 * **Owner-only pages:** a custom `superuser_required` decorator, built with `functools.wraps` and `login_required`, protects the management pages.
@@ -371,8 +348,8 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 ## E-commerce
 
 * **Payment model:** a one-off payment per booking using Stripe Payment Intents and the Stripe Payment Element. The price comes from the database and is converted into pence on the server, so it can't be changed in the browser.
-* **Flow:** book a slot (the booking is saved as *pending* and the slot is held) &rarr; checkout page &rarr; card details got straight to Stripe &rarr; Stripe returns the client to the success page, which check with Stripe that the payment succeeded and belongs to this booking &rarr; booking confirmed, order created, email sent.
-* **Webhook:** Stripe also sends `payment.intent.succeeded` to `/checkout/wh/`, so the booking is confirmed even if the client closes the browser before the success page loads. The message's signature is verified with the webhook secret, and events for other payments are acknowledged and ignored.
+* **Flow:** book a slot (the booking is saved as *pending* and the slot is held) &rarr; checkout page &rarr; card details go straight to Stripe &rarr; Stripe returns the client to the success page, which checks with Stripe that the payment succeeded and belongs to this booking &rarr; booking confirmed, order created, email sent.
+* **Webhook:** Stripe also sends `payment_intent.succeeded` to `/checkout/wh/`, so the booking is confirmed even if the client closes the browser before the success page loads. The message's signature is verified with the webhook secret, and events for other payments are acknowledged and ignored.
 * **Feedback:** card errors appear under the form, the success page shows the order number, and a confirmation email is sent. Email problems are logged and can never stop a paid booking being confirmed.
 * **Refunds:** cancellations more than 48 hours ahead are refunded manually through the Stripe dashboard. Automatic refunds are a future feature.
 
@@ -386,34 +363,32 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 
 ## Tools & Technologies
 
-<!-- TODO: bring over the badge table from Rep Register and add: Stripe, django-allauth, Gmail SMTP (or chosen email service), Cloudinary (if used), dbdiagram / Lucidchart (ERD), Balsamiq, Canva. -->
-
 | Tool/Tech | Use |
 |----|----|
 | [![badge](https://img.shields.io/badge/Git-grey?logo=git&logoColor=F05032)](https://git-scm.com) | Version control. (git add, git commit, git push, git pull) |
 | [![badge](https://img.shields.io/badge/GitHub-grey?logo=GitHub)](https://github.com/) | Secure online storage, Issues and the project board |
 | [![Badge](https://img.shields.io/badge/VSCode-grey?logo=htmx&logoColor=blue)](https://code.visualstudio.com/) | Local IDE for development |
-| [![Badge](https://img.shields.io/badge/HTML-grey?logo=html5=blue)](https://en.wikipedia.org.wiki/HTML) | Main site content and layout |
+| [![Badge](https://img.shields.io/badge/HTML-grey?logo=html5)](https://en.wikipedia.org/wiki/HTML) | Main site content and layout |
 | [![Badge](https://img.shields.io/badge/CSS-grey?logo=css&logoColor=rebeccapurple)](https://developer.mozilla.org/en-US/docs/Web/CSS) |Design and layout |
 | [![Badge](https://img.shields.io/badge/JavaScript-grey?logo=javascript)](https://www.javascript.com/) | Stripe card form on the checkout page |
 | [![Badge](https://img.shields.io/badge/Bootstrap-grey?logo=bootstrap)](https://getbootstrap.com/) | Front-end CSS framework for responsiveness and pre-built components|
-| [![Badge](https://img.shields.io/badge/Font_Awesome-grey?logo=fontawesome](https://fontawesome.com/) | Icons |
-| [![Badge](https://img.shields.io/badge/Google_Fonts-grey?logo=googlefonts](https://font.google.com/) | Fonts |
+| [![Badge](https://img.shields.io/badge/Font_Awesome-grey?logo=fontawesome)](https://fontawesome.com/) | Icons |
+| [![Badge](https://img.shields.io/badge/Google_Fonts-grey?logo=googlefonts)](https://fonts.google.com/) | Fonts |
 | [![Badge](https://img.shields.io/badge/Python-grey?logo=python)](https://www.python.org/) | Back end programming |
 | [![Badge](https://img.shields.io/badge/Django-grey?logo=django)](https://www.djangoproject.com/) | Python framework for web application development|
-| [![Badge](https://img.shields.io/badge/django--allauth-grey)](https://www.docs.allauth.org/) | Registration, login and logout |
+| [![Badge](https://img.shields.io/badge/django--allauth-grey)](https://docs.allauth.org/) | Registration, login and logout |
 | [![Badge](https://img.shields.io/badge/Stripe-grey)](https://stripe.com/) | Online payments and webhooks |
-| [![Badge](https://img.shields.io/badge/Cloudinary-grey?logo=cloudinary)](https://cloudinary.com/) | Sending confirmation emails (SMTP) |
-| [![Badge](https://img.shields.io/badge/Gmail-grey?logo=gmail)](https://mail.google.com/) | Hosting reading images |
-| [![Badge](https://img.shields.io/badge/crispy--forms-grey)](https://django-crispy-froms.readthedocs.io/) | Bootstrap 5 styling for forms |
+| [![Badge](https://img.shields.io/badge/Cloudinary-grey?logo=cloudinary)](https://cloudinary.com/) | Hosting reading images |
+| [![Badge](https://img.shields.io/badge/Gmail-grey?logo=gmail)](https://mail.google.com/) |  Sending confirmation emails (SMTP) |
+| [![Badge](https://img.shields.io/badge/crispy--forms-grey)](https://django-crispy-forms.readthedocs.io/) | Bootstrap 5 styling for forms |
 | [![Badge](https://img.shields.io/badge/Heroku-grey?logo=heroku)](https://www.heroku.com/) | Hosting the deployed site |
 | [![Badge](https://img.shields.io/badge/PostgreSQL-grey?logo=PostgreSQL)](https://www.postgresql.org/) | Relational database |
 | [![Badge](https://img.shields.io/badge/WhiteNoise-grey)](https://whitenoise.readthedocs.io/) | Serving static files on Heroku |
 | [![Badge](https://img.shields.io/badge/Gunicorn-grey?logo=gunicorn)](https://gunicorn.org/) | Web server on Heroku |
 | [![Badge](https://img.shields.io/badge/Balsamiq-grey?)](https://balsamiq.cloud/) | For creating wireframes |
-| [![Badge](https://img.shields.io/badge/draw.io-grey?logo=diagrams.net)](https://www.drawio.com/) | ERD |
+| [![Badge](https://img.shields.io/badge/dbdiagram.io-grey?logo=diagrams.net)](https://www.dbdiagram.io/) | ERD |
 | [![Badge](https://img.shields.io/badge/Mermaid-grey?logo=mermaid)](https://mermaid.js.org/) | Booking and payment flowchart |
-| [![Badge](https://img.shields.io/badge/FREEP!K-grey?)](https://www.freepik.com/) | Testimonial starsign Instructions |
+| [![Badge](https://img.shields.io/badge/FREEP!K-grey?)](https://www.freepik.com/) | Star sign icons |
 | [![Badge](https://img.shields.io/badge/favicon.io-grey?)](https://favicon.io/) | Favicon generator |
 | [![Badge](https://img.shields.io/badge/flake8_and_autopep8-grey?logo=python)](https://flake8.pycqa.org/) | Checking and fixing PEP8 style locally |
 | [![Badge](https://img.shields.io/badge/Claude-grey?logo=claude)](https://claude.ai/) | Used to help initial planning, explaining concepts, debugging and assisting with the automated testing |
@@ -421,15 +396,13 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 
 ## Testing
 > [!NOTE]
-> Please see the separate [TESTING.md](testing.md) file for all the tests carried out.
-
-Full testing is documented in [TESTING.md](TESTING.md). It covers:
+> Please see the separate [TESTING.md](TESTING.md) file for all the tests carried out.
 
 - test-driven development (TDD) with Django's automated tests
 - manual testing of every user story
 - validators: W3C HTML, Jigsaw CSS, JSHint and the CI Python Linter (PEP8)
 - Lighthouse, accessibility and responsiveness
-- Stripe payment testing (success, declined card, 3D Secure)
+- Stripe payment testing (successful and declined cards, and the webhook)
 
 ### Known Bugs and Fixes
 
@@ -440,12 +413,12 @@ Full testing is documented in [TESTING.md](TESTING.md). It covers:
 | requirements.txt saved as UTF-16 and shown as binary on GitHub | PowerShell's pip freeze > requirements.txt saved the file as UTF-16. GitHub shows it as 'Binary file not shown' and Heroku may not be able to read it. |  Re-save as UTF-8 and use Out-File -Encoding utf8 in future. |
 | Visiting `/bookings/5/cancel/` gave a 404 page saying the path "didn't match" | The URL pattern was `<int:pk>/`, missing `cancel`. The automated tests passed because `reverse()` builds the URL from whatever the pattern says. | Changed the pattern to `<int:pk>/cancel/`. Found by typing the address during the manual testing. |
 | `IntegrityError` when cancelling a second booking on the same slot | The live database still had an old version of the double-booking constraint (without `~`). The migration file had been fixed and remade under the same name so `migrate` skipped it. | Rolled back with `migrate bookings 0001`, then ran `migrate` again. Lesson: roll back an applied migration before replacing its file. |
-| The Log in link on the sign-up page went to `/accounts/signup/{%'account_login}` | The template tag was missing `url` and the closing `%` so Django left is as plain text. | Changed it to {% url 'account_login' %} and added a test that checks the link.|
+| The Log in link on the sign-up page went to `/accounts/signup/{%'account_login}` | The template tag was missing `url` and the closing `%` so Django left it as plain text. | Changed it to `{% url 'account_login' %}` and added a test that checks the link.|
 | A 45-minute slot could be booked for a 70-minute reading | The booking form offered every free slot, whatever its length. | Only slots at least as long as the chosen reading are offered, for both booking and rescheduling. |
 | Server error (500) on the payment success page on Heroku | The `MAILERS` setting paired Gmail's SMTP options with the console backend. The error only showed in Heroku's logs once `LOGGING` was configured. | Corrected the backend, and wrapped email sending in `try/except` so an email problem can never break a payment. |
 | Cancelling a booking in the Django admin didn't free its slot | The slot was only freed by site's cancel view. | Moved the logic into `Booking.save()` so the slot stays correct however a booking is changed. |
 
-More bugs, included those found by the automated tests are recorded in [TESTING.md](TESTING.md).
+More bugs, including those found by the automated tests are recorded in [TESTING.md](TESTING.md).
 
 ### Known Issues
 
@@ -459,9 +432,8 @@ More bugs, included those found by the automated tests are recorded in [TESTING.
 
 ### Heroku Deployment
 
-The live deployed applied can be found at [Readings with Rehanon](https://readings-with-rehanon-392f3147072a.herokuapp.com/)
+The live deployed app can be found at [Readings with Rehanon](https://readings-with-rehanon-392f3147072a.herokuapp.com/)
 
-### Heroku Deployment
 This project uses [Heroku](https://www.heroku.com/) as a service (PaaS) that enables developers to build, run, and operate applications entirely in the cloud.
 
 Deployments steps are as follows after account setup:
@@ -475,13 +447,20 @@ Deployments steps are as follows after account setup:
 | Key | Value|
 |----|----|
 | `DATABASE_URL` | user-inserts-own-postgres-database-url |
-| `DISABLE_COLLECTSTATIC | 1(*this is temporary, and can be removed for the final deployment*) |
 | `SECRET_KEY` | any-random-secret-key |
+| `CLOUDINARY_URL` | user's own value |
+| `STRIPE_PUBLIC_KEY` | user's own value |
+| `STRIPE_SECRET_KEY` | user's own value |
+| `STRIPE_WH_SECRET` | user's own value |
+| `EMAIL_HOST_USER` | user's own value |
+| `EMAIL_HOST_PASS` | user's own value |
+
+DEBUG is deliberately not set on Heroku.
 
 Heroku needs some additional files in order to deploy properly.
 - [requirements.txt](/requirements.txt)
 - [Procfile](/Procfile)
-- [.python-version](/.python-version)
+- [.python-version-3.13](/.python-version)
 
 You can install this project's [requirements.txt](/requirements.txt) (where applicable) using:
 - `pip3 install -r requirements.txt`
@@ -509,7 +488,7 @@ Or:
 
 The Python terminal window should now be connected and deployed to Heroku.  
 
-## WhiteNoise
+### WhiteNoise
 This project uses the [WhiteNoise](https://whitenoise.readthedocs.io/en/latest/) to aid with static files temporarily hosted on the live Heroku site.
 
 To include WhiteNoise in your own projects:
@@ -517,7 +496,7 @@ To include WhiteNoise in your own projects:
     - `pip install whitenoise`
 - Update the `requirements.txt` file with the newly installed package:
     - `pip freeze --local > requirements.txt`
-- Edit your `settings.py` file and add WhiteHoise to the `MIDDLEWARE` list, above all other middleware (apart from Django's "SecurityMiddleware"):
+- Edit your `settings.py` file and add WhiteNoise to the `MIDDLEWARE` list, above all other middleware (apart from Django's "SecurityMiddleware"):
 
 ```` Python
 # settings.py
@@ -532,7 +511,7 @@ MIDDLEWARE = [
 ### Local Development
 This project can be cloned or forked to make a local copy on your own system.
 
-For either method, you will need to install any applicable packages found withing the [requirements.txt](requirements.txt) file.
+For either method, you will need to install any applicable packages found within the [requirements.txt](requirements.txt) file.
 
 - `pip3 install -r  requirements.txt`.
 
@@ -577,16 +556,17 @@ You can clone the repository by following these steps:
 4. Open "Git Bash" or "Terminal".
 5. Change the current working directory to the location where you want the cloned directory.
 6. In your IDE Terminal, type the following command to clone the repository:
-    - `git clone https://www.github.com/Rehanon-Mackenzie/rep-register.git`
+    - `git clone https://www.github.com/Rehanon-Mackenzie/readings-with-rehanon.git`
 7. Press "Enter" to create your local clone.
 
 Alternatively, if using Ona (formerly Gitpod), you can click below to create your own workspace using this repository.
 
-[![Open in Ona-Gitpod](https://ona.com/run-in-ona.svg)](https://gitpod.io/#https://www.github.com/Rehanon-Mackenzie/rep-register)
+[![Open in Ona-Gitpod](https://ona.com/run-in-ona.svg)](https://gitpod.io/#https://www.github.com/Rehanon-Mackenzie/readings-with-rehanon)
 
-**Please Note**: in order to directly open the project in Ona(Gitpod)m, you should have the browser extension installed.  A tutorial on how to do that can be found [here](https://ona.com/docs/classic/user/configure/user-settings/browser-extension).
+**Please Note**: in order to directly open the project in Ona(Gitpod), you should have the browser extension installed.  A tutorial on how to do that can be found [here](https://ona.com/docs/classic/user/configure/user-settings/browser-extension).
 
 #### Forking
+
 By forking the GitHub Repository, you make a copy of the original repository on your GitHub account to view and/or make changes without affecting the original owner's repository. You can fork this repository by using the following steps:
 
 1. Log into GitHub and locate [Rehanon-Mackenzie/readings-with-rehanon](https://github.com/Rehanon-Mackenzie/readings-with-rehanon).
@@ -594,18 +574,14 @@ By forking the GitHub Repository, you make a copy of the original repository on 
 3. Once clicked, you should now have copy of the original repository in your own GitHub account.
 
 ### Local VS Deployment
-There are no remaining major differences between the local version when compared to the deployed version online.
 
-| Key | Value |
-| --- | --- |
-| `DATABASE_URL` | user's own value |
-| `SECRET_KEY` | user's own value |
-| `STRIPE_PUBLIC_KEY` | user's own value |
-| `STRIPE_SECRET_KEY` | user's own value |
-| `STRIPE_WH_SECRET` | user's own value |
-| `EMAIL_HOST_USER` | user's own value |
-| `EMAIL_HOST_PASS` | user's own value |
-| `DISABLE_COLLECTSTATIC` | 1 (temporary, remove before final deploy) |
+| --- | Local | Heroku |
+| --- | ----- | ------ |
+| DEBUG | True | Off |
+| Error pages | Django debug page | Custom 404/500 |
+| Emails | Printed to terminal | Sent via Gmail SMTP |
+| Stripe webhook | Stripe CLI forwarding | Direct to `checkout/wh/` |
+| Static files | Django dev server | WhiteNoise |
 
 ### PostgreSQL
 
@@ -629,10 +605,10 @@ To obtain my Postgres Database from Code Institute, I followed these steps:
 1. Create a Stripe account and switch to test mode.
 2. Get the public and secret keys from Developers → API keys.
 3. Add a webhook endpoint: https://YOUR-APP.herokuapp.com/checkout/wh/
-4. Select events: payment_intent.succeeded, payment_intent.payment_failed.
-5. Copy the signing secret to STRIPE_WH_SECRET. -->
+4. Select events: `payment_intent.succeeded`.
+5. Copy the signing secret to STRIPE_WH_SECRET. 
 
-To test the webhook locally, the [Stripe CLI](https://docs.stripe.com/stripe-cli) can forward events with `stripe listen --forward-to localhost:8000/checkout/wh`. It prints its own signing secret for `env.py`.
+To test the webhook locally, the [Stripe CLI](https://docs.stripe.com/stripe-cli) can forward events with `stripe listen --forward-to localhost:8000/checkout/wh/`. It prints its own signing secret for `env.py`.
 
 ### Email
 
@@ -646,19 +622,14 @@ When these are set, `settings.py` uses Gmail's SMTP server through Django 6.1's 
 
 ### Code
 
-<!-- TODO: every adapted source, with a matching comment above the code in the project. E.g.
-- Code Institute Boutique Ado walkthrough — Stripe checkout and webhook handler structure (adapted)
-- Stripe documentation — Payment Intents
-- django-allauth documentation -->
+
 
 ### Content
 
-<!-- TODO -->
+
 
 ### Media
 
-<!-- TODO -->
+
 
 ## Acknowledgements
-
-<!-- TODO -->
