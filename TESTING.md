@@ -114,3 +114,9 @@ All pass with no errors.
 | checkout | [webhooks.py](/checkout/webhooks.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/Rehanon-Mackenzie/readings-with-rehanon/refs/heads/main/checkout/webhooks.py) | ![checkout webhooks validation](documentation/testing/validators/checkout-webhooks-validation.png) | Pass |
 | readings_with_rehanon | [urls.py](/readings_with_rehanon/urls.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/Rehanon-Mackenzie/readings-with-rehanon/refs/heads/main/readings_with_rehanon/urls.py) | ![readings_with_rehanon urls validation](documentation/testing/validators/project-urls-validation.png) | Pass |
 | readings_with_rehanon | [settings.py](/readings_with_rehanon/settings.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/Rehanon-Mackenzie/readings-with-rehanon/refs/heads/main/readings_with_rehanon/settings.py) | ![readings_with_rehanon settings validation](documentation/testing/validators/settings-validation.png) | Pass |
+
+### Lighthouse 
+
+| Page | Device | Screenshot |
+| ---- | ------ | ---------- |
+| Home | Desktop | 
