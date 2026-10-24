@@ -173,7 +173,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-# Print emails to the terminal during development
+# Sends real emails if Gmail is configured, otherwise print them to the
+# terminal
 if os.environ.get("EMAIL_HOST_USER"):
     MAILERS = {
         'default': {

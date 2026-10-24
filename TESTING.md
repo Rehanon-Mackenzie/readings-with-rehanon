@@ -119,4 +119,9 @@ All pass with no errors.
 
 | Page | Device | Screenshot |
 | ---- | ------ | ---------- |
-| Home | Desktop | 
+| Home | Desktop | ![Lighthouse home](documentation/testing/validators/lighthouse-desktop-home.png) |
+| Home | Mobile | ![Lighthouse home](documentation/testing/validators/lighthouse-mobile-home.png) |
+| Readings | Desktop | ![Lighthouse readings](documentation/testing/validators/lighthouse-desktop-readings.png) |
+| Readings | Mobile | ![Lighthouse readings](documentation/testing/validators/lighthouse-mobile-readings.png) |
+| My Bookings | Desktop | ![Lighthouse my bookings](documentation/testing/validators/lighthouse-desktop-my-bookings.png) |
+| My Bookings | Mobile | ![Lighthouse my bookings](documentation/testing/validators/lighthouse-mobile-my-bookings.png) |
