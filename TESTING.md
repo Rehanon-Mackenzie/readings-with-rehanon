@@ -53,10 +53,19 @@
 I have used the recommended [HTML W3C Validator](https://validator.w3.org/) to validate all my HTML files.
 
 | File | URL |Screenshot | Notes|
-|----|----|----|----|----|
-| [home.html](/templates/home.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Frep-register-0917d4849eb9.herokuapp.com%2F#textarea) | ![Home Page](/documentation/validation/home-page-validation.PNG) | |
+|----- | --- | --------- | ---- |
+| [home.html](/templates/home.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F) | ![Home Page](documentation/testing/validators/home-validation.png) | |
 | [reading_list.html](readings/templates/readings/reading_list.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2F) | ![Reading list](documentation/testing/validators/reading-list-validation.png) |  |
-| [reading_detail.html](readings/templates/readings/reading_detail.html) |
+| [reading_detail.html](readings/templates/readings/reading_detail.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2Fbirth-chart) | ![Reading detail](documentation/testing/validators/reading-detail-validation.png) | |
+| [login.html](templates/account/login.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Flogin%2F) | ![Login](documentation/testing/validators/html-login-validation.png) | |
+| [signup.html](templates/account/signup.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Fsignup%2F) | ![Signup](documentation/testing/validators/html-signup-validation.png) | |
+| [404.html](templates/404.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F404#textarea) | ![404](documentation/testing/validators/html-404-validation.png) | |
+| [book_reading.html](bookings/templates/bookings/book_reading.html) | Direct Input | ![Book reading](documentation/testing/validators/html-book-a-reading-validation.png) | |
+| [cancel_booking.html](bookings/templates/bookings/cancel_booking.html) | Direct Input | ![Cancel booking](documentation/testing/validators/html-cancel-booking-validation.png) | |
+| [reschedule_booking.html](bookings/templates/bookings/reschedule_booking.html) | Direct Input | ![Reschedule booking](documentation/testing/validators/html-reschedule-booking-validation.png) | |
+| [checkout.html](checkout/templates/checkout/checkout.html) | Direct Input | ![Checkout](documentation/testing/validators/html-checkout-validation.png) | |
+| [checkout_success.html](checkout/templates/checkout/checkout_success.html) | Direct Input | ![Checkout success]()
+
 
 ### CSS
 I have used the recommended [CSS Jigsaw Validator](https://jigsaw.w3.org/css-validator) to validate all of my CSS files.
