@@ -417,6 +417,7 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 | A 45-minute slot could be booked for a 70-minute reading | The booking form offered every free slot, whatever its length. | Only slots at least as long as the chosen reading are offered, for both booking and rescheduling. |
 | Server error (500) on the payment success page on Heroku | The `MAILERS` setting paired Gmail's SMTP options with the console backend. The error only showed in Heroku's logs once `LOGGING` was configured. | Corrected the backend, and wrapped email sending in `try/except` so an email problem can never break a payment. |
 | Cancelling a booking in the Django admin didn't free its slot | The slot was only freed by site's cancel view. | Moved the logic into `Booking.save()` so the slot stays correct however a booking is changed. |
+| W3C: 'No element in scope' on reading detail | `linebreaks` adds its own `<p>`, so it was nested inside another `<p>` | Changed the wrapper to `<div>` |g
 
 More bugs, including those found by the automated tests are recorded in [TESTING.md](TESTING.md).
 
