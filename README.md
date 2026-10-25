@@ -39,6 +39,7 @@ To test the full booking journey:
 - [Business Logic](#business-logic)
 - [E-commerce](#e-commerce)
 - [Authentication & Authorisation](#authentication--authorisation)
+- [Security](#security)
 - [Tools & Technologies](#tools--technologies)
 - [Testing](#testing)
   - [Known Bugs and Fixes](#known-bugs-and-fixes)
@@ -370,7 +371,7 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 * **Card details** never touch this site. They go straight to Stripe through the Payment Element.
 * **Prices** are taken from the database on the server, and payments are checked with Stripe on the server, so neither can be changed in the browser.
 * **Owner-only lookups:** bookings are always fetched with `user=request.user`, so guessing another booking's URL returns a 404.
-* **Protected records:** `on_delete=PROTECT` stops readings or slots with bookings with readings being deleted.
+* **Protected records:** `on_delete=PROTECT` stops readings or slots that have bookings being deleted.
 * **Clickjacking protection:** Django's `XFrameOptionsMiddleware` stops the site being embedded in another site's frame.
 * **Images** are served from Cloudinary over HTTPS only.
 
@@ -448,7 +449,7 @@ More bugs, including those found by the automated tests are recorded in [TESTING
 
 The live deployed app can be found at [Readings with Rehanon](https://readings-with-rehanon-392f3147072a.herokuapp.com/)
 
-This project uses [Heroku](https://www.heroku.com/) as a Plafomr as a Service (PaaS) that enables developers to build, run, and operate applications entirely in the cloud.
+This project uses [Heroku](https://www.heroku.com/) as a Platform as a Service (PaaS) that enables developers to build, run, and operate applications entirely in the cloud.
 
 Deployment steps are as follows after account setup:
 - Select **New** in the top right-hand corner of your Heroku Dashboard, and select **Create new app** from the dropdown menu.
@@ -541,10 +542,10 @@ import os
 
 os.environ.setdefault("SECRET_KEY", "any-random-secret-key")
 os.environ.setdefault("DATABASE_URL", "user-inserts-own-postgres-database-url")
-os.enviiron.setdefault("CLOUDINARY_URL", "user-inserts-own-cloudinary-url")
-os.enviiron.setdefault("STRIPE_PUBLIC_KEY", "user-inserts-own-stripe-public-key")
-os.enviiron.setdefault("STRIPE_SECRET_KEY", "user-inserts-own-stripe-secret-key")
-os.enviiron.setdefault("STRIPE_WH_SECRET", "user-inserts-own-stripe-wh-secret")
+os.environ.setdefault("CLOUDINARY_URL", "user-inserts-own-cloudinary-url")
+os.environ.setdefault("STRIPE_PUBLIC_KEY", "user-inserts-own-stripe-public-key")
+os.environ.setdefault("STRIPE_SECRET_KEY", "user-inserts-own-stripe-secret-key")
+os.environ.setdefault("STRIPE_WH_SECRET", "user-inserts-own-stripe-wh-secret")
 
 
 
@@ -642,7 +643,7 @@ When these are set, `settings.py` uses Gmail's SMTP server through Django 6.1's 
 
 ### Code
 
-* [Django documentation](https://docs.django.project.com) for models, constraints, `annotate()`, `F()` expressions and testing.
+* [Django documentation](https://docs.djangoproject.com) for models, constraints, `annotate()`, `F()` expressions and testing.
 * [Stripe documentation](https://docs.stripe.com/payments/payment-element) for Payment Intents, the Payment Element and webhooks.
 * [django-allauth documentation](https://docs.allauth.org/) for authentication.
 * [Python docs: functools.wraps](https://docs.python.org/3/library/functools.html#functools.wraps) for the `superuser_required` decorator.
@@ -663,8 +664,8 @@ When these are set, `settings.py` uses Gmail's SMTP server through Django 6.1's 
 
 
 ## Acknowledgements
-* My tutor, Manu at Bristol College for his help and support throughout the course it was truly appreciated. 
+* My tutor, Manu at Bristol College for his help and support throughout the course; it was truly appreciated. 
 * Code Institute's practical based teaching of code that has allowed me to actually build things that work!
 * Friends and family who have listened to me when I was struggling with the learning process and were always willing to manually test for me. You're gems and I'm blessed.
-* [codebar brighton](https://codebar.io/brighton) is part the wider codebar network and who are always so encouraging of folks wanting to learn to code who are't always represented in tech.
-* Finally, my astrological signature that means in this lifetime at least I came here to learn and will always be looking for the next bit of knowledge to consume. We did it!
+* [codebar brighton](https://codebar.io/brighton) is part of the wider codebar network and who are always so encouraging of folks wanting to learn to code who aren't always represented in tech.
+* Finally, my astrological signature that means in this lifetime at least, I came here to learn and will always be looking for the next bit of knowledge to consume. We did it!

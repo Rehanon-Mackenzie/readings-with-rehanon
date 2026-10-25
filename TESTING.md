@@ -7,7 +7,7 @@ Return to [README.md](README.md)
 ### Bugs found by manual testing
 | Bug | Cause | Fix |
 | --- | ----- | --- |
-| Slots shorter than a reading's duration were offered for booking | The slot query only checked the slot was free in the future | `available_slots_for()` annotates each slot's length with `ExpressionWrapper` and filters out slots shorter than the reading's duration |
+| Slots shorter than a reading's duration were offered for booking | The slot query only checked the slot was free and in the future | `available_slots_for()` annotates each slot's length with `ExpressionWrapper` and filters out slots shorter than the reading's duration |
 | A new test passed before the feature was written | The test data didn't actually hit the edge case being tested | Rewrote the test so it failed first, then wrote the code to make it pass |
 | 500 error on the checkout success page on Heroku | `MAILERS` paired SMTP options with the console backend (`InvalidMailer`); no traceback was visible | Added `LOGGING` so tracebacks appear in `heroku logs`, set the backend to SMTP, and wrapped the email in try/except with `logger.exception` so an email failure can't break a paid booking | 
 | Cancelling a booking in the admin didn't free the slot | The slot's `is_booked` was only updated in the cancel view | Moved the sync into `Booking.save()` so every save, wherever it comes from, keeps the slot in step |
@@ -15,9 +15,9 @@ Return to [README.md](README.md)
 | Manage Slots list lost its date order | `annotate()` with `Count` ignores `Meta.ordering` | Added an explicit `order_by('start_time')` |
 | 500 error adding a reading with an image on Heroku | `CLOUDINARY_URL` config var had the wrong API secret (`AuthorizationRequired: Invalid Signature`) | Found using `heroku logs --tail`; corrected the secret in the config var |
 | W3C warning "Empty heading" on the checkout success page: the reading name wasn't showing | Typo in the template variable (`book.reading_type.name`), which Django renders as blank without raising an error | Corrected to `booking.reading_type.name` and re-validated |
-| W3C "No p element in scope" on reading detail | `linebreaks` add its own `<p>`, so it was nested inside another `<p>` | Changed the wrapper to a `<div>` |
+| W3C "No p element in scope" on reading detail | `linebreaks` adds its own `<p>`, so it was nested inside another `<p>` | Changed the wrapper to a `<div>` |
 | Lighthouse Best Practices 59, with Mixed Content Warnings | Cloudinary image URLs were built with `http://` | Added `cloudinary.config(secure=True)` in settings |
-| Lighthouse Perfomance 75, "Properly size images" (1.7 MB savings) | Cloudinary images were sent at full size | Used the `cloudinary_url` tage with `width=600`, `quality='auto'`, `fetch_format='auto'` and lazy loading |
+| Lighthouse Performance 75, "Properly size images" (1.7 MB savings) | Cloudinary images were sent at full size | Used the `cloudinary_url` tag with `width=600`, `quality='auto'`, `fetch_format='auto'` and lazy loading |
 
 ### Bugs found by automated testing
 | Test | What it caught | Fix |
@@ -28,7 +28,7 @@ Return to [README.md](README.md)
 | `test_booked_slot_rejected` failed: the booking form accepted a slot that was already booked | The form's slot didn't exclude slots, so a client could have booked a slot that was already taken. | Filtered the slot dropdown to free, future slots only: `AvailabilitySlot.objects.filter(is_booked=False, start_time__gt=timezone.now())`. |
 | `test_slot_cannot_have_two_active_bookings` failed: the database allowed two active bookings on the same slot | The `UniqueConstraint` condition was written as Q(status='cancelled') instead of `~Q(status='cancelled')`. Without the `~` (NOT), the rule only applied to cancelled bookings. | Added the `~`. The test still failed, because the migration kept the old rule: the learning was that tests build their database from the migrations not the `models.py`. Therefore, I rolled back, deleted and unapplied the migration and ran `makemigrations` and `migrate` again. All tests passed. |
 | `TemplateDoesNotExist: bookings/book_readings.html` | Typo in the template name in the view. | Corrected it to `bookings/book_reading.html`. |
-| `test_successful_payment_confirms_booking` failed: "No templates used to render the response" | Two mistakes in the test, not the view: the fake payment's status was misspelt, `succeeded`, and the line giving the mock return its value (`mock_retrieve.return_value = self.fake_intent()`) was missed out. The view correctly treated the fake payment as unpaid. | Corrected the spelling and added the missing line. | 
+| `test_successful_payment_confirms_booking` failed: "No templates used to render the response" | Two mistakes in the test, not the view: the fake payment's status was misspelt, `suceeded`, and the line giving the mock return its value (`mock_retrieve.return_value = self.fake_intent()`) was missed out. The view correctly treated the fake payment as unpaid. | Corrected the spelling and added the missing line. | 
 
 
 ## Manual Testing
@@ -72,7 +72,7 @@ Return to [README.md](README.md)
 | Delete slot | Deleted a slot with no bookings | Slot removed with a success message | Pass |
 | Slot with history | Viewed a free slot that had a cancelled booking | Shows "Has booking history", no Delete button | Pass |
 | Admin cancel | Cancelled a booking in the Django admin | Slot shows Free again | Pass |
-| 404 page | Visitee a URL that doesn't exist | Custom 404 page with links home | Pass |
+| 404 page | Visited a URL that doesn't exist | Custom 404 page with links home | Pass |
 
 ## Validation Testing
 
@@ -80,7 +80,7 @@ Return to [README.md](README.md)
 I have used the recommended [HTML W3C Validator](https://validator.w3.org/) to validate all my HTML files.
 
 >[!Note]
->Public pages were validated by URI, and the links re-run the check. Pages that a need a login, and the 404 page, were validated by direct input. Those results can't be linked to, so the screenshots are the evidence.
+>Public pages were validated by URI, and the links re-run the check. Pages that need a login, and the 404 page, were validated by direct input. Those results can't be linked to, so the screenshots are the evidence.
 
 | File | URL |Screenshot | Notes|
 |----- | --- | --------- | ---- |
