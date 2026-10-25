@@ -127,5 +127,5 @@ I used the Lighthouse extension with Chrome Developer Tools to test performance,
 | My Bookings | Desktop | ![Lighthouse my bookings](documentation/testing/validators/lighthouse-desktop-my-bookings.png) |
 | My Bookings | Mobile | ![Lighthouse my bookings](documentation/testing/validators/lighthouse-mobile-my-bookings.png) |
 
-> ![Note]
-> **Mobile home page (Performance 75)**: Lighthouse simulates a slow phone and network.  The main factors were render-blocking CDN stylesheets (Bootstrap, Font Awesome, Google Fonts), unused CSS from Bootstrap, and the profile image as the Largest Contentful Paint element. Desktop scored 95, and Accessibility, Best Practices and SEO scored 100 on both. Future improvements: self-host and trim the CSS, enable whiteNoise compression and caching, and preload the hero image.
+>![Note]
+>**Mobile home page (Performance 75)**: Lighthouse simulates a slow phone and network.  The main factors were render-blocking CDN stylesheets (Bootstrap, Font Awesome, Google Fonts), unused CSS from Bootstrap, and the profile image as the Largest Contentful Paint element. Desktop scored 95, and Accessibility, Best Practices and SEO scored 100 on both. Future improvements: self-host and trim the CSS, enable whiteNoise compression and caching, and preload the hero image.
