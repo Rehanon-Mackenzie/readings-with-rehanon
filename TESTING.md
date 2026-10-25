@@ -1,3 +1,9 @@
+# Testing
+
+Return to [README.md](README.md)
+
+## Bugs
+
 ### Bugs found by manual testing
 | Bug | Cause | Fix |
 | --- | ----- | --- |
@@ -6,20 +12,23 @@
 | 500 error on the checkout success page on Heroku | `MAILERS` paired SMTP options with the console backend (`InvalidMailer`); no traceback was visible | Added `LOGGING` so tracebacks appear in `heroku logs`, set the backend to SMTP, and wrapped the email in try/except with `logger.exception` so an email failure can't break a paid booking | 
 | Cancelling a booking in the admin didn't free the slot | The slot's `is_booked` was only updated in the cancel view | Moved the sync into `Booking.save()` so every save, wherever it comes from, keeps the slot in step |
 | Delete button showed on the free slots that had cancelled bookings, which would fail because of `PROTECT` | The template only checked `is_booked` | Annotated `booking_count` and only show Delete when it is 0; otherwise show "Has booking history" |
-| Manage Slots list lost its date order | `annotate()` with `Count` ignores `Meta.ordering` | Added an explicit `order_by('start_time)` |
-| 500 error adding a reading with an image on Heroku | `CLOUDINARY_URL` config var had the wrong API secret (`AuthorizationRequired: Invalid Signature`) | Found using `heroku logs --tail`; corrected the secret in the config var | 
+| Manage Slots list lost its date order | `annotate()` with `Count` ignores `Meta.ordering` | Added an explicit `order_by('start_time')` |
+| 500 error adding a reading with an image on Heroku | `CLOUDINARY_URL` config var had the wrong API secret (`AuthorizationRequired: Invalid Signature`) | Found using `heroku logs --tail`; corrected the secret in the config var |
+| W3C warning "Empty heading" on the checkout success page: the reading name wasn't showing | Typo in the template variable (`book.reading_type.name`), which Django renders as blank without raising an error | Corrected to `booking.reading_type.name` and re-validated |
+| W3C "No p element in scope" on reading detail | `linebreaks` add its own `<p>`, so it was nested inside another `<p>` | Changed the wrapper to a `<div>` |
+| Lighthouse Best Practices 59, with Mixed Content Warnings | Cloudinary image URLs were built with `http://` | Added `cloudinary.config(secure=True)` in settings |
+| Lighthouse Perfomance 75, "Properly size images" (1.7 MB savings) | Cloudinary images were sent at full size | Used the `cloudinary_url` tage with `width=600`, `quality='auto'`, `fetch_format='auto'` and lazy loading |
 
 ### Bugs found by automated testing
 | Test | What it caught | Fix |
 | --- | --- | --- |
 | `test_anonymous_user_sees_login_and_register_links` | The "Log in" link in the My Account dropdown had no text, so logged-out user saw a blank menu item. | Added the missing link text in `base.html`.|
 | `test_admin_can_edit_a_reading`, `test_detail_page_shows_the_reading` | `super().save()` was indented inside the `if not self.slug:` block, so readings were only saved the first time. Edits silently did nothing. | Moved `super().save()` out of the `if` block so every save works. |
-| `FieldError: Unknown field(s) (birth-date)` when running tests | A field name had a hyphen in the form's `fields` list. This does not working with Python naming. | Used VS Code's global search for every instance of `birth-date` and changed each to `birth_date`. |
+| `FieldError: Unknown field(s) (birth-date)` when running tests | A field name had a hyphen in the form's `fields` list. This does not work with Python naming. | Used VS Code's global search for every instance of `birth-date` and changed each to `birth_date`. |
 | `test_booked_slot_rejected` failed: the booking form accepted a slot that was already booked | The form's slot didn't exclude slots, so a client could have booked a slot that was already taken. | Filtered the slot dropdown to free, future slots only: `AvailabilitySlot.objects.filter(is_booked=False, start_time__gt=timezone.now())`. |
 | `test_slot_cannot_have_two_active_bookings` failed: the database allowed two active bookings on the same slot | The `UniqueConstraint` condition was written as Q(status='cancelled') instead of `~Q(status='cancelled')`. Without the `~` (NOT), the rule only applied to cancelled bookings. | Added the `~`. The test still failed, because the migration kept the old rule: the learning was that tests build their database from the migrations not the `models.py`. Therefore, I rolled back, deleted and unapplied the migration and ran `makemigrations` and `migrate` again. All tests passed. |
-| `TemplatedDoesNotExist: bookings/book_readings.html` | Typo in the template name in the view. | Corrected it to `bookings/book_reading.html`. |
-| `test_successful_payment_confirms_booking` failed: "No templates used to render the response" | Two mistakes in the test, not the view: the fake payment's status was misspelt, `suceeded`, and the line giving the mock return its value (`mock_retrieve.return_value = self.fake_intent()`) was missed out. The view correctly treated the fake payment as unpaid. | Corrected the spelling and added the missing line. | 
-| W3C warning "Empty heading" on the checkout success page: the reading name wasn't showing | Typo in the template variable (`book.reading_type.name`), which Django renders as blank without raising an error | Corrected to `booking.reading_type.name` and re-validated |
+| `TemplateDoesNotExist: bookings/book_readings.html` | Typo in the template name in the view. | Corrected it to `bookings/book_reading.html`. |
+| `test_successful_payment_confirms_booking` failed: "No templates used to render the response" | Two mistakes in the test, not the view: the fake payment's status was misspelt, `succeeded`, and the line giving the mock return its value (`mock_retrieve.return_value = self.fake_intent()`) was missed out. The view correctly treated the fake payment as unpaid. | Corrected the spelling and added the missing line. | 
 
 
 ## Manual Testing
@@ -45,22 +54,43 @@
 | Birth date cannot be in the future | Filled in booking form with future birth date | Error message displayed "Date of birth cannot be in the future." form not accepted | Pass |
 | Cancelled booking moves to "Past and cancelled"| Cancelled a booking | Confirmation message displayed "Your (reading name) on (booking slot) has been cancelled. Redirected to my bookings and booking is now in "Past and cancelled | Pass |
 | Cancelled booking releases slot | As a client, cancelled booking and then booked another reading | Cancelled slot was available to book into | Pass |
-| No cancel button within 48 hours| As admin added slot for 24 ahead. As a client, booked it and opened My Bookings | No cancel button; message "Less than 48 hours to go, so this booking can't be changed online." | Pass |
+| No cancel button within 48 hours| As admin added slot for 24 hours ahead. As a client, booked it and opened My Bookings | No cancel button; message "Less than 48 hours to go, so this booking can't be changed online." | Pass |
 | Other user can't cancel a booking | Logged in as another user typed `/bookings/5/cancel/` (the first client's booking) | 404 page with "No Booking matches the given query" | Pass |
+
+
+### Payment, Email and Management Testing
+| Feature | Test | Expected | Result |
+| ------- | ---- | -------- | ------ |
+| Successful payment | Booked a reading and paid with `4242 4242 4242 4242` | Success page with order number; booking shows Confirmed in My Bookings | Pass |
+| Declined card | Paid with `4000 0000 0000 0002` | Error shown under the card form; booking stays pending | Pass |
+| Confirmation email | Completed a payment on the live site | Email received with reading, time, amount and order number | Pass |
+| Webhook | Checked Stripe dashboard after a live payment | `payment_intent.succeeded` delivered with a 200 response | Pass |
+| Unpaid booking | Left checkout without paying, then opened My Bookings | Booking shows Pending with a Pay now button | Pass |
+| Reschedule | Rescheduled a booking more than 48 hours ahead | Booking moved to the new time; old slot freed | Pass |
+| Slot too short | Opened the booking form for a 70-minute reading when only a 45-minute slot was free | Short slot not offered | Pass |
+| Add slot | As site owner, added a lot on Manage Slots | Slot listed as Free and offered on the booking form | Pass |
+| Delete slot | Deleted a slot with no bookings | Slot removed with a success message | Pass |
+| Slot with history | Viewed a free slot that had a cancelled booking | Shows "Has booking history", no Delete button | Pass |
+| Admin cancel | Cancelled a booking in the Django admin | Slot shows Free again | Pass |
+| 404 page | Visitee a URL that doesn't exist | Custom 404 page with links home | Pass |
 
 ## Validation Testing
 
 ### HTML
 I have used the recommended [HTML W3C Validator](https://validator.w3.org/) to validate all my HTML files.
 
+>[!Note]
+>Public pages were validated by URI, and the links re-run the check. Pages that a need a login, and the 404 page, were validated by direct input. Those results can't be linked to, so the screenshots are the evidence.
+
 | File | URL |Screenshot | Notes|
 |----- | --- | --------- | ---- |
-| [home.html](/templates/home.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F) | ![Home Page](documentation/testing/validators/home-validation.png) | Pass |
-| [reading_list.html](readings/templates/readings/reading_list.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2F) | ![Reading list](documentation/testing/validators/reading-list-validation.png) | Pass |
-| [reading_detail.html](readings/templates/readings/reading_detail.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2Fbirth-chart) | ![Reading detail](documentation/testing/validators/reading-detail-validation.png) | Pass |
+| [home.html](home/templates/home/index.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F) | ![Home Page](documentation/testing/validators/html-home-validation.png) | Pass |
+| [reading_list.html](readings/templates/readings/reading_list.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2F) | ![Reading list](documentation/testing/validators/html-reading-list-validation.png) | Pass |
+| [reading_detail.html](readings/templates/readings/reading_detail.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Freadings%2Fbirth-chart) | ![Reading detail](documentation/testing/validators/html-reading-detail-validation.png) | Pass |
 | [login.html](templates/account/login.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Flogin%2F) | ![Login](documentation/testing/validators/html-login-validation.png) | Pass |
 | [signup.html](templates/account/signup.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2Faccounts%2Fsignup%2F) | ![Signup](documentation/testing/validators/html-signup-validation.png) | Pass |
-| [404.html](templates/404.html) | [HTML Validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Freadings-with-rehanon-392f3147072a.herokuapp.com%2F404#textarea) | ![404](documentation/testing/validators/html-404-validation.png) | Pass |
+| [404.html](templates/404.html) | Direct Input | ![404](documentation/testing/validators/html-404-validation.png) | Pass |
+| [my_bookings.html](bookings/templates/bookings/my_bookings.html) | Direct Input | ![My bookings](documentation/testing/validators/html-my-bookings-validation.png) | Pass |
 | [book_reading.html](bookings/templates/bookings/book_reading.html) | Direct Input | ![Book reading](documentation/testing/validators/html-book-a-reading-validation.png) | Pass |
 | [cancel_booking.html](bookings/templates/bookings/cancel_booking.html) | Direct Input | ![Cancel booking](documentation/testing/validators/html-cancel-booking-validation.png) |Pass |
 | [reschedule_booking.html](bookings/templates/bookings/reschedule_booking.html) | Direct Input | ![Reschedule booking](documentation/testing/validators/html-reschedule-booking-validation.png) | Pass |
@@ -80,7 +110,7 @@ I have used the recommended [CSS Jigsaw Validator](https://jigsaw.w3.org/css-val
 
 | File | Screenshot | Result |
 | ---- | ---------- | ---- |
-| [stripe_payment.js](checkout/static/checkout/js/stripe_payment.js) | ![Stripe paynent js](documentation/testing/validators/js-stripe-payment-validation.png) | Pass |
+| [stripe_payment.js](checkout/static/checkout/js/stripe_payment.js) | ![Stripe payment js](documentation/testing/validators/js-stripe-payment-validation.png) | Pass |
 ### Python (PEP8)
 
 All Python files were checked with flake8 locally and the CI Python Linter.
@@ -128,4 +158,4 @@ I used the Lighthouse extension with Chrome Developer Tools to test performance,
 | My Bookings | Mobile | ![Lighthouse my bookings](documentation/testing/validators/lighthouse-mobile-my-bookings.png) |
 
 >[!Note]
->**Mobile home page (Performance 75)**: Lighthouse simulates a slow phone and network.  The main factors were render-blocking CDN stylesheets (Bootstrap, Font Awesome, Google Fonts), unused CSS from Bootstrap, and the profile image as the Largest Contentful Paint element. Desktop scored 95, and Accessibility, Best Practices and SEO scored 100 on both. Future improvements: self-host and trim the CSS, enable whiteNoise compression and caching, and preload the hero image.
+>**Mobile home page (Performance 75)**: Lighthouse simulates a slow phone and network.  The main factors were render-blocking CDN stylesheets (Bootstrap, Font Awesome, Google Fonts), unused CSS from Bootstrap, and the profile image as the Largest Contentful Paint element. Desktop scored 95, and Accessibility, Best Practices and SEO scored 100 on both. Future improvements: self-host and trim the CSS, enable WhiteNoise compression and caching, and preload the hero image.

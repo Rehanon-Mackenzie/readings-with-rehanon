@@ -258,7 +258,7 @@ The project is split into apps so that each one holds a set of models and views 
 | status | CharField (choices) | pending / confirmed / cancelled |
 | created_on | DateTimeField | auto |
 
-A conditional `UniqueConstraint` allows only booking per slot that isn't cancelled, so cancelled slots can be booked again while the cancelled booking is kept as history.
+A conditional `UniqueConstraint` allows only one booking per slot that isn't cancelled, so cancelled slots can be booked again while the cancelled booking is kept as history.
 
 #### Order
 
@@ -306,7 +306,7 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 | Favicon | The favicon is a small image that displays in the browser tab. The intention is to enhance the user experience for those who have multiple tabs open and cannot read the text in the tabs.  I carried over the planet mercury icon from my first project for its astrological relevance. | ![favicon](/documentation/features/favicon.png) |  |
 | Navbar and footer | Links to Home, About, Readings and Contact on every page. The My Account menu changes for visitors, clients and the site owner. The footer links to my social media. | ![navbar](documentation/features/navbar-desktop.png) ![footer](documentation/features/footer.png)| 1, 2 |
 | Home page | Hero, about me, featured readings pulled from the database, client testimonials and contact details. | ![home page](/documentation/features/home-page.png) | 1 |
-| Readings list | Cards for each reading with an image, summary, duration and price. | ![reading list]() | 1 |
+| Readings list | Cards for each reading with an image, summary, duration and price. | ![reading list](documentation/features/reading-list.png) | 1 |
 |Reading detail | Full description, duration, price and a Book this reading button. | ![reading detail](documentation/features/reading-detail.png) | 1, 3 |
 | Registration | Visitors create an account so that they can book, pay and manage their bookings privately. | ![Registration](documentation/features/registration-page.png) | 2 |
 | Login | Secure login is required  before booking. There is an option to remember the user's details. | ![Login](documentation/features/login-page.png) | 2 |
@@ -360,6 +360,19 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 * **Owner-only data:** every booking view looks bookings up with `user=request.user`, so another user gets a 404 even if they guess a booking's number in the URL.
 * **Site owner:** reading and slot management are restricted to superusers. Clients are redirected home with a message, and logged out users are sent to log in.
 * **Card details never reach this site.** They go directly to Stripe.
+
+## Security
+
+* **Secrets:** keys and passwords are stored in `env.py` locally (listed in `.gitignore`, so never committed) and in Heroku Config Vars in production.
+* **DEBUG** is off on the live site, so error pages never show code or settings.
+* **CSRF protection** is on every form. The only exception is the Stripe webhook, which is protected instead by verifying Stripe's signature with the webhook secret.
+* **Passwords** are hashed by Django and checked by its password validators.
+* **Card details** never touch this site. They go straight to Stripe through the Payment Element.
+* **Prices** are taken from the database on the server, and payments are checked with Stripe on the server, so neither can be changed in the browser.
+* **Owner-only lookups:** bookings are always fetched with `user=request.user`, so guessing another booking's URL returns a 404.
+* **Protected records:** `on_delete=PROTECT` stops readings or slots with bookings with readings being deleted.
+* **Clickjacking protection:** Django's `XFrameOptionsMiddleware` stops the site being embedded in another site's frame.
+* **Images** are served from Cloudinary over HTTPS only.
 
 ## Tools & Technologies
 
@@ -417,7 +430,7 @@ classDef decision fill:#e30b5c,stroke:#e30b5c,color:#ffffff
 | A 45-minute slot could be booked for a 70-minute reading | The booking form offered every free slot, whatever its length. | Only slots at least as long as the chosen reading are offered, for both booking and rescheduling. |
 | Server error (500) on the payment success page on Heroku | The `MAILERS` setting paired Gmail's SMTP options with the console backend. The error only showed in Heroku's logs once `LOGGING` was configured. | Corrected the backend, and wrapped email sending in `try/except` so an email problem can never break a payment. |
 | Cancelling a booking in the Django admin didn't free its slot | The slot was only freed by site's cancel view. | Moved the logic into `Booking.save()` so the slot stays correct however a booking is changed. |
-| W3C: 'No element in scope' on reading detail | `linebreaks` adds its own `<p>`, so it was nested inside another `<p>` | Changed the wrapper to `<div>` |g
+| W3C: 'No p element in scope' on reading detail | `linebreaks` adds its own `<p>`, so it was nested inside another `<p>` | Changed the wrapper to `<div>` |
 
 More bugs, including those found by the automated tests are recorded in [TESTING.md](TESTING.md).
 
@@ -435,9 +448,9 @@ More bugs, including those found by the automated tests are recorded in [TESTING
 
 The live deployed app can be found at [Readings with Rehanon](https://readings-with-rehanon-392f3147072a.herokuapp.com/)
 
-This project uses [Heroku](https://www.heroku.com/) as a service (PaaS) that enables developers to build, run, and operate applications entirely in the cloud.
+This project uses [Heroku](https://www.heroku.com/) as a Plafomr as a Service (PaaS) that enables developers to build, run, and operate applications entirely in the cloud.
 
-Deployments steps are as follows after account setup:
+Deployment steps are as follows after account setup:
 - Select **New** in the top right-hand corner of your Heroku Dashboard, and select **Create new app** from the dropdown menu.
 - Your app name must be unique, and then choose a region closest to you (EU or USA), then finally click **Create App**.
 - From the new app **Settings**, click **Reveal Config Vars**, and set your environment variables to match your private `env.py` file.
@@ -461,7 +474,7 @@ DEBUG is deliberately not set on Heroku.
 Heroku needs some additional files in order to deploy properly.
 - [requirements.txt](/requirements.txt)
 - [Procfile](/Procfile)
-- [.python-version-3.13](/.python-version)
+- [.python-version](/.python-version)
 
 You can install this project's [requirements.txt](/requirements.txt) (where applicable) using:
 - `pip3 install -r requirements.txt`
@@ -474,7 +487,7 @@ The [Procfile](/Procfile) can be created with the following command:
 - *replace `app_name` with the name of your primary Django app name; the folder where `settings.py` is located
 
 The [.python-version](/.python-version) file tells Heroku the specific version of Python to use when running your application.
-- `3.12` (or similar)
+- `3.13` (or similar)
 
 For Heroku deployment, follow these steps to connect your own GitHub repository to the newly created app:
 
@@ -528,6 +541,12 @@ import os
 
 os.environ.setdefault("SECRET_KEY", "any-random-secret-key")
 os.environ.setdefault("DATABASE_URL", "user-inserts-own-postgres-database-url")
+os.enviiron.setdefault("CLOUDINARY_URL", "user-inserts-own-cloudinary-url")
+os.enviiron.setdefault("STRIPE_PUBLIC_KEY", "user-inserts-own-stripe-public-key")
+os.enviiron.setdefault("STRIPE_SECRET_KEY", "user-inserts-own-stripe-secret-key")
+os.enviiron.setdefault("STRIPE_WH_SECRET", "user-inserts-own-stripe-wh-secret")
+
+
 
 # local environment only (do not include these in production/deployment!)
 os.environ.setdefault("DEBUG", "True")
@@ -623,14 +642,29 @@ When these are set, `settings.py` uses Gmail's SMTP server through Django 6.1's 
 
 ### Code
 
-
+* [Django documentation](https://docs.django.project.com) for models, constraints, `annotate()`, `F()` expressions and testing.
+* [Stripe documentation](https://docs.stripe.com/payments/payment-element) for Payment Intents, the Payment Element and webhooks.
+* [django-allauth documentation](https://docs.allauth.org/) for authentication.
+* [Python docs: functools.wraps](https://docs.python.org/3/library/functools.html#functools.wraps) for the `superuser_required` decorator.
+* [Bootstrap 5 documentation](https://getbootstrap.com/docs/5.3/) for layout and components.
+* Code Institute's Boutique Ado walkthrough for general approach to Stripe checkout and webhooks, adapted for a booking system.
+* Deployment and README layout based on Code Institute's templates.
 
 ### Content
 
-
+* All written content is my own and adapted from milestone project 1 [Rehanon Mackenzie Astrology](https://github.com/Rehanon-Mackenzie/Rehanon-Mackenzie-Astrology).
+* Testimonials were provided by previous clients of mine with their permission.
 
 ### Media
-
+* Profile and tarot photographs are my own.
+* Astrological chart images were created using [Astro-Seek](https://www.astro-seek.com).
+* Star sign icons from [Freep!k](https://www.freepik.com)
+* Favicon from my first project, generated with [favicon.io](https://favicon.io)
 
 
 ## Acknowledgements
+* My tutor, Manu at Bristol College for his help and support throughout the course it was truly appreciated. 
+* Code Institute's practical based teaching of code that has allowed me to actually build things that work!
+* Friends and family who have listened to me when I was struggling with the learning process and were always willing to manually test for me. You're gems and I'm blessed.
+* [codebar brighton](https://codebar.io/brighton) is part the wider codebar network and who are always so encouraging of folks wanting to learn to code who are't always represented in tech.
+* Finally, my astrological signature that means in this lifetime at least I came here to learn and will always be looking for the next bit of knowledge to consume. We did it!
