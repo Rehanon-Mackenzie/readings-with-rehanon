@@ -116,6 +116,7 @@ All pass with no errors.
 | readings_with_rehanon | [settings.py](/readings_with_rehanon/settings.py) | [PEP8 CI Link](https://pep8ci.herokuapp.com/https://raw.githubusercontent.com/Rehanon-Mackenzie/readings-with-rehanon/refs/heads/main/readings_with_rehanon/settings.py) | ![readings_with_rehanon settings validation](documentation/testing/validators/settings-validation.png) | Pass |
 
 ### Lighthouse 
+I used the Lighthouse extension with Chrome Developer Tools to test performance, accessibility, best practices and SEO of the website.
 
 | Page | Device | Screenshot |
 | ---- | ------ | ---------- |
@@ -125,3 +126,6 @@ All pass with no errors.
 | Readings | Mobile | ![Lighthouse readings](documentation/testing/validators/lighthouse-mobile-readings.png) |
 | My Bookings | Desktop | ![Lighthouse my bookings](documentation/testing/validators/lighthouse-desktop-my-bookings.png) |
 | My Bookings | Mobile | ![Lighthouse my bookings](documentation/testing/validators/lighthouse-mobile-my-bookings.png) |
+
+> ![Note]
+> **Mobile home page (Performance 75)**: Lighthouse simulates a slow phone and network.  The main factors were render-blocking CDN stylesheets (Bootstrap, Font Awesome, Google Fonts), unused CSS from Bootstrap, and the profile image as the Largest Contentful Paint element. Desktop scored 95, and Accessibility, Best Practices and SEO scored 100 on both. Future improvements: self-host and trim the CSS, enable whiteNoise compression and caching, and preload the hero image.
